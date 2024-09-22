@@ -1,0 +1,90 @@
+{
+  "project_info": {
+    "project_number": "62029558948",
+    "project_id": "carcare-6da3d",
+    "storage_bucket": "carcare-6da3d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:62029558948:android:015fec0f5ba4bdcfe92231",
+        "android_client_info": {
+          "package_name": "com.carcareai.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "62029558948-ae456vmetr7h0be481f7q7b6gi5rqunp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.carcareai.app",
+            "certificate_hash": "5ad97ea0ce59178024ae7f9142a915a141ac4398"
+          }
+        },
+        {
+          "client_id": "62029558948-9o210tkhv99h7mqpre8ra693hn216j48.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkgJE9zY23SQExzg58OoSFNkenwO6BLHQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "62029558948-9o210tkhv99h7mqpre8ra693hn216j48.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "62029558948-m1imku9boo4i6ufi2rg1stdrs9t7c7n8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.carcare"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:62029558948:android:2ce94b5bf318e5a2e92231",
+        "android_client_info": {
+          "package_name": "com.example.carcare"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "62029558948-9o210tkhv99h7mqpre8ra693hn216j48.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkgJE9zY23SQExzg58OoSFNkenwO6BLHQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "62029558948-9o210tkhv99h7mqpre8ra693hn216j48.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "62029558948-m1imku9boo4i6ufi2rg1stdrs9t7c7n8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.carcare"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
