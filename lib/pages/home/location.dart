@@ -15,7 +15,7 @@ class LocationIndicator extends StatelessWidget {
         ),
         Row(
           children: [
-            const Icon(Icons.location_pin),
+            const Icon(Icons.location_pin, size: 15,),
             const SizedBox(
               width: 10,
             ),

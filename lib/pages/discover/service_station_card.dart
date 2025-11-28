@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 
 class ServiceStationCard extends StatelessWidget {
   final String imageUrl;
@@ -30,23 +31,22 @@ class ServiceStationCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final size = MediaQuery.of(context).size;
-    return InkWell(
+    return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ServiceStationDetailsPage(
-              imageUrl: imageUrl,
-              stationName: stationName,
-              price: price,
-              distance: distance,
-              status: status,
-              closingTime: closingTime,
-              rating: rating,
-              servicesOffered: servicesOffered,
-              reviews: reviews,
-              address: address,
-            ),
+        context.pushTransition(
+          duration: const Duration(milliseconds: 500),
+          type: PageTransitionType.sharedAxisHorizontal,
+          child: ServiceStationDetailsPage(
+            imageUrl: imageUrl,
+            stationName: stationName,
+            price: price,
+            distance: distance,
+            status: status,
+            closingTime: closingTime,
+            rating: rating,
+            servicesOffered: servicesOffered,
+            reviews: reviews,
+            address: address,
           ),
         );
       },
@@ -87,7 +87,6 @@ class ServiceStationCard extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-
                       ],
                     ),
                     const SizedBox(height: 12),
@@ -257,11 +256,10 @@ class ServiceStationDetailsPage extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar:
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16), 
-            child: FilledButton(onPressed: () {}, child: const Text("Book Now")),
-          ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        child: FilledButton(onPressed: () {}, child: const Text("Book Now")),
+      ),
     );
   }
 }

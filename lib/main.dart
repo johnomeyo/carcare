@@ -11,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
-  // await dotenv.load(fileName: ".env");
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -35,7 +34,6 @@ class MyApp extends StatelessWidget {
     TextTheme textTheme = Theme.of(context).textTheme;
     MaterialTheme theme = MaterialTheme(textTheme);
     return MaterialApp(
-      title: 'Flutter Demo',
       theme: brightness == Brightness.dark ? theme.dark() : theme.light(),
       home: const AuthCheck(),
     );
