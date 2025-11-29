@@ -38,20 +38,16 @@ class AuthMethods {
 
       User? user = userCredential.user;
 
-      // Store user information in Firestore (excluding the password)
       await _firestore.collection("users").doc(user!.uid).set({
         'uid': user.uid,
         'email': email,
-        // Store other user details here as needed
       });
 
       return user;
     } on FirebaseAuthException catch (e) {
-      // Handle Firebase authentication errors
       print('Error creating user: ${e.message}');
       return null;
     } catch (e) {
-      // Handle any other errors
       print('An unknown error occurred: $e');
       return null;
     }
@@ -60,7 +56,6 @@ class AuthMethods {
   Future<User?> signIn(
       {required String email, required String password}) async {
     try {
-      // Sign in with Firebase Authentication
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
@@ -78,11 +73,9 @@ class AuthMethods {
 
   Future<void> signOut() async {
     try {
-      // Sign out from Firebase Authentication
       await _auth.signOut();
       // await GoogleSignIn.signOut();
     } catch (e) {
-      // Handle any sign-out errors
       print('Error signing out: $e');
     }
   }

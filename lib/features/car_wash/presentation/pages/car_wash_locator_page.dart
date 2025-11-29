@@ -1,98 +1,7 @@
+import 'package:carcare/features/car_wash/presentation/models/carwash_model.dart';
 import 'package:flutter/material.dart';
 
-// --- Data Models ---
 
-/// Represents a single carwash service station.
-class CarwashStation {
-  final String id;
-  final String name;
-  final String address;
-  final double latitude;
-  final double longitude;
-  final String imageUrl;
-  final double rating;
-  final String distance;
-  final String eta;
-  final String queueStatus; // e.g., 'Busy', 'Available', 'Closed'
-  final String openingTime;
-  final String closingTime;
-  final Map<String, double> prices; // Basic, Detailed, Engine
-  final List<String> servicesOffered;
-  final List<String> galleryUrls;
-  final List<Map<String, String>> reviews;
-  final int currentQueueTimeMins;
-
-  CarwashStation({
-    required this.id,
-    required this.name,
-    required this.address,
-    required this.latitude,
-    required this.longitude,
-    required this.imageUrl,
-    required this.rating,
-    required this.distance,
-    required this.eta,
-    required this.queueStatus,
-    required this.openingTime,
-    required this.closingTime,
-    required this.prices,
-    required this.servicesOffered,
-    required this.galleryUrls,
-    required this.reviews,
-    required this.currentQueueTimeMins,
-  });
-}
-
-// --- Mock Data ---
-
-final List<CarwashStation> mockStations = [
-  CarwashStation(
-    id: 's1',
-    name: 'Sparkle Wash & Detail',
-    address: '450 Garden Road, City Center',
-    latitude: -1.286389,
-    longitude: 36.817223,
-    imageUrl: 'https://lh4.googleusercontent.com/proxy/CmbXaPPWcZQpD9_yvxX0DSaqEOt0ntYp8I_tcr_5rGZL60FkrXH-tUfcmGDGF9iI9dM9hdUwtUbZLJ7Yw5Js4aQRmWfiWs4U8oAK6onlFCz1Zs52BI2npM-qP5oOSgQ',
-    rating: 4.8,
-    distance: '1.2 km',
-    eta: '5 mins',
-    queueStatus: 'Busy',
-    openingTime: '08:00 AM',
-    closingTime: '06:00 PM',
-    prices: {'Basic Wash': 500.0, 'Detailed Wash': 1500.0, 'Engine Wash': 800.0},
-    servicesOffered: ['Basic Wash', 'Vacuum', 'Waxing', 'Interior Detail'],
-    galleryUrls: List.generate(3, (i) => 'https://placehold.co/400x300/F08080/FFFFFF?text=Gallery+Pic+${i+1}'),
-    reviews: [
-      {'user': 'Alice J.', 'text': 'Super quick and friendly service!', 'rating': '5'},
-      {'user': 'Mark S.', 'text': 'Great wax job, but pricey.', 'rating': '4'},
-    ],
-    currentQueueTimeMins: 18,
-  ),
-  CarwashStation(
-    id: 's2',
-    name: 'Quick-Lube Car Spa',
-    address: '789 Industrial Ave, West Side',
-    latitude: -1.290556,
-    longitude: 36.820278,
-    imageUrl: 'https://robisearch.com/wp-content/uploads/2021/05/istockphoto-1129655443-612x612-1.jpg',
-    rating: 4.2,
-    distance: '4.5 km',
-    eta: '12 mins',
-    queueStatus: 'Available',
-    openingTime: '07:30 AM',
-    closingTime: '07:00 PM',
-    prices: {'Basic Wash': 400.0, 'Detailed Wash': 1200.0, 'Engine Wash': 700.0},
-    servicesOffered: ['Basic Wash', 'Oil Change', 'Tire Pressure'],
-    galleryUrls: List.generate(3, (i) => 'https://placehold.co/400x300/90EE90/FFFFFF?text=Gallery+Pic+${i+1}'),
-    reviews: [
-      {'user': 'Bob K.', 'text': 'Fast and cheap!', 'rating': '4'},
-      {'user': 'Jane D.', 'text': 'The wait was short. Satisfied.', 'rating': '4'},
-    ],
-    currentQueueTimeMins: 5,
-  ),
-];
-
-// --- Custom Page Transition ---
 
 Route _slideRoute(Widget page) {
   return PageRouteBuilder(
@@ -114,9 +23,7 @@ Route _slideRoute(Widget page) {
   );
 }
 
-// =======================================================================
-// Feature 1: Carwash Locator Page (List View)
-// =======================================================================
+
 
 class CarwashLocatorPage extends StatelessWidget {
   const CarwashLocatorPage({super.key});
@@ -168,7 +75,6 @@ class CarwashLocatorPage extends StatelessWidget {
   }
 }
 
-// --- Card Component for Locator Page ---
 
 class CarwashStationCard extends StatelessWidget {
   final CarwashStation station;
@@ -186,7 +92,6 @@ class CarwashStationCard extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: InkWell(
         onTap: () {
-          // Use the custom slide transition
           Navigator.of(context).push(_slideRoute(CarwashProfilePage(station: station)));
         },
         borderRadius: BorderRadius.circular(16),
@@ -195,7 +100,6 @@ class CarwashStationCard extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Station Image
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: Image.network(
@@ -210,7 +114,6 @@ class CarwashStationCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Name and Rating
                     Text(
                       station.name,
                       style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
@@ -219,7 +122,7 @@ class CarwashStationCard extends StatelessWidget {
                     ),
                     Row(
                       children: [
-                        Icon(Icons.star, color: Colors.amber, size: 18),
+                        const Icon(Icons.star, color: Colors.amber, size: 18),
                         const SizedBox(width: 4),
                         Text('${station.rating}'),
                         const SizedBox(width: 8),
@@ -231,7 +134,6 @@ class CarwashStationCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
 
-                    // Distance and ETA
                     Row(
                       children: [
                         Icon(Icons.directions_car_filled, size: 16, color: theme.colorScheme.secondary),
@@ -451,7 +353,7 @@ class CarwashProfilePage extends StatelessWidget {
         // Rating Stars
         Column(
           children: [
-            Icon(Icons.star, color: Colors.amber, size: 30),
+            const Icon(Icons.star, color: Colors.amber, size: 30),
             Text(
               '${station.rating}',
               style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),

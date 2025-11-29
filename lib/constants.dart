@@ -1,3 +1,4 @@
+import 'package:carcare/features/car_wash/presentation/models/carwash_model.dart';
 import 'package:carcare/pages/discover/service_station_card.dart';
 
 final List<String> questions = [
@@ -11,6 +12,52 @@ final List<String> questions = [
   "How can I reset my password in the app?",
   "What should I do if Car Care AI can't diagnose my problem?",
   "How can I contact customer support?",
+];
+final List<CarwashStation> mockStations = [
+  CarwashStation(
+    id: 's1',
+    name: 'Sparkle Wash & Detail',
+    address: '450 Garden Road, City Center',
+    latitude: -1.286389,
+    longitude: 36.817223,
+    imageUrl: 'https://lh4.googleusercontent.com/proxy/CmbXaPPWcZQpD9_yvxX0DSaqEOt0ntYp8I_tcr_5rGZL60FkrXH-tUfcmGDGF9iI9dM9hdUwtUbZLJ7Yw5Js4aQRmWfiWs4U8oAK6onlFCz1Zs52BI2npM-qP5oOSgQ',
+    rating: 4.8,
+    distance: '1.2 km',
+    eta: '5 mins',
+    queueStatus: 'Busy',
+    openingTime: '08:00 AM',
+    closingTime: '06:00 PM',
+    prices: {'Basic Wash': 500.0, 'Detailed Wash': 1500.0, 'Engine Wash': 800.0},
+    servicesOffered: ['Basic Wash', 'Vacuum', 'Waxing', 'Interior Detail'],
+    galleryUrls: ['https://images.unsplash.com/photo-1633014041037-f5446fb4ce99?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Y2FyJTIwd2FzaHxlbnwwfHwwfHx8MA%3D%3D','https://plus.unsplash.com/premium_photo-1661501054447-4381b60e6f80?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTN8fGNhciUyMHdhc2h8ZW58MHx8MHx8fDA%3D','https://plus.unsplash.com/premium_photo-1661501054447-4381b60e6f80?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTN8fGNhciUyMHdhc2h8ZW58MHx8MHx8fDA%3D','https://plus.unsplash.com/premium_photo-1661501054447-4381b60e6f80?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTN8fGNhciUyMHdhc2h8ZW58MHx8MHx8fDA%3D'],
+    reviews: [
+      {'user': 'Alice J.', 'text': 'Super quick and friendly service!', 'rating': '5'},
+      {'user': 'Mark S.', 'text': 'Great wax job, but pricey.', 'rating': '4'},
+    ],
+    currentQueueTimeMins: 18,
+  ),
+  CarwashStation(
+    id: 's2',
+    name: 'Quick-Lube Car Spa',
+    address: '789 Industrial Ave, West Side',
+    latitude: -1.290556,
+    longitude: 36.820278,
+    imageUrl: 'https://robisearch.com/wp-content/uploads/2021/05/istockphoto-1129655443-612x612-1.jpg',
+    rating: 4.2,
+    distance: '4.5 km',
+    eta: '12 mins',
+    queueStatus: 'Available',
+    openingTime: '07:30 AM',
+    closingTime: '07:00 PM',
+    prices: {'Basic Wash': 400.0, 'Detailed Wash': 1200.0, 'Engine Wash': 700.0},
+    servicesOffered: ['Basic Wash', 'Oil Change', 'Tire Pressure'],
+    galleryUrls: ['https://images.unsplash.com/photo-1633014041037-f5446fb4ce99?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Y2FyJTIwd2FzaHxlbnwwfHwwfHx8MA%3D%3D','https://plus.unsplash.com/premium_photo-1661501054447-4381b60e6f80?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTN8fGNhciUyMHdhc2h8ZW58MHx8MHx8fDA%3D'],
+    reviews: [
+      {'user': 'Bob K.', 'text': 'Fast and cheap!', 'rating': '4'},
+      {'user': 'Jane D.', 'text': 'The wait was short. Satisfied.', 'rating': '4'},
+    ],
+    currentQueueTimeMins: 5,
+  ),
 ];
 
 final List<String> answers = [

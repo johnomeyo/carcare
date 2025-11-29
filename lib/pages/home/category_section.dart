@@ -16,8 +16,8 @@ class ServiceCategoryRow extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           ServiceCategory(
-            title: 'Oil Change',
-            icon: Icons.oil_barrel,
+            title: 'Add Expense',
+            icon: Icons.receipt_long,
             onTap: () {},
           ),
           const SizedBox(width: 16),
