@@ -1,3 +1,4 @@
+import 'package:carcare/features/expenses/presentation/pages/expenses_dashboard.dart';
 import 'package:carcare/pages/home/popular_section.dart';
 import 'package:carcare/pages/home/presentation/pages/add_car_page.dart';
 import 'package:carcare/pages/home/promo_card.dart';
@@ -107,7 +108,7 @@ class _HomepageState extends State<Homepage> {
                     reverseDuration: const Duration(milliseconds: 500),
                     type: PageTransitionType.scale,
                     alignment: Alignment.topRight,
-                    child: const NotificationsPage(),
+                    child: const ExpenseDashboardPage(),
                   ));
             },
             icon: const Icon(Icons.notifications))

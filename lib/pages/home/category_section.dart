@@ -1,4 +1,5 @@
 import 'package:carcare/features/car_wash/presentation/pages/car_wash_locator_page.dart';
+import 'package:carcare/features/expenses/presentation/pages/add_expense_page.dart';
 import 'package:carcare/features/inspection/presentation/inspection_page.dart';
 import 'package:carcare/pages/home/presentation/pages/add_car_page.dart';
 import 'package:carcare/pages/home/service_category.dart';
@@ -23,10 +24,15 @@ class ServiceCategoryRow extends StatelessWidget {
             title: 'Add Expense',
             icon: Icons.receipt_long,
             onTap: () {
-              DialogUtils.showConfirmDialog(
-                context: context,
-                title: "Unavailable",
-                message: "This feature is coming soon!",
+              Navigator.push(
+                context,
+                PageTransition(
+                  duration: const Duration(milliseconds: 500),
+                  reverseDuration: const Duration(milliseconds: 500),
+                  type: PageTransitionType.scale,
+                  alignment: Alignment.centerRight,
+                  child: const AddExpensePage(),
+                ),
               );
             },
           ),
