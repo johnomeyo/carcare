@@ -1,6 +1,7 @@
 import 'package:carcare/features/car_wash/presentation/pages/car_wash_locator_page.dart';
 import 'package:carcare/features/inspection/presentation/inspection_page.dart';
 import 'package:carcare/pages/home/service_category.dart';
+import 'package:carcare/utils/dialogs_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -20,7 +21,12 @@ class ServiceCategoryRow extends StatelessWidget {
           ServiceCategory(
             title: 'Add Expense',
             icon: Icons.receipt_long,
-            onTap: () {},
+            onTap: () {
+              DialogUtils.showConfirmDialog(
+                  context: context,
+                  title: "Unavailable",
+                  message: "This feature is coming soon!");
+            },
           ),
           const SizedBox(width: 16),
           ServiceCategory(
@@ -31,8 +37,7 @@ class ServiceCategoryRow extends StatelessWidget {
                 type: PageTransitionType.rightToLeft,
                 child: const ParkingHomePage(),
               );
-            }
-            ,
+            },
           ),
           const SizedBox(width: 16),
           ServiceCategory(
@@ -49,14 +54,19 @@ class ServiceCategoryRow extends StatelessWidget {
           ServiceCategory(
             title: 'Repair',
             icon: Icons.car_repair,
-            onTap: () {},
+            onTap: () {
+              DialogUtils.showConfirmDialog(
+                  context: context,
+                  title: "Unavailable",
+                  message: "This feature is coming soon!");
+            },
           ),
           const SizedBox(width: 16),
           ServiceCategory(
             title: 'Car Wash',
             icon: Icons.local_car_wash,
             onTap: () {
-                            context.pushTransition(
+              context.pushTransition(
                 type: PageTransitionType.rightToLeft,
                 child: const CarwashLocatorPage(),
               );
@@ -66,13 +76,23 @@ class ServiceCategoryRow extends StatelessWidget {
           ServiceCategory(
             title: 'Tire Check',
             icon: Icons.tire_repair,
-            onTap: () {},
+            onTap: () {
+              DialogUtils.showConfirmDialog(
+                  context: context,
+                  title: "Unavailable",
+                  message: "This feature is coming soon!");
+            },
           ),
           const SizedBox(width: 16),
           ServiceCategory(
             title: 'Battery',
             icon: Icons.battery_charging_full,
-            onTap: () {},
+            onTap: () {
+              DialogUtils.showConfirmDialog(
+                  context: context,
+                  title: "Unavailable",
+                  message: "This feature is coming soon!");
+            },
           ),
         ],
       ),

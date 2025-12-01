@@ -104,7 +104,7 @@ class DialogUtils {
     
     return showDialog(
       context: context,
-      barrierDismissible: true,
+      barrierDismissible: false,
       builder: (context) => Dialog(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
@@ -184,7 +184,7 @@ class DialogUtils {
     );
   }
 
-  /// Shows a confirmation dialog with two actions
+  // Shows a confirmation dialog with two actions
   static Future<bool?> showConfirmDialog({
     required BuildContext context,
     required String title,
@@ -197,7 +197,7 @@ class DialogUtils {
     
     return showDialog<bool>(
       context: context,
-      barrierDismissible: true,
+      barrierDismissible: false,
       builder: (context) => Dialog(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
@@ -206,13 +206,11 @@ class DialogUtils {
         child: Container(
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
-            color: theme.dialogBackgroundColor,
             borderRadius: BorderRadius.circular(20),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Warning Icon
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
@@ -231,10 +229,7 @@ class DialogUtils {
                       : theme.colorScheme.primary,
                 ),
               ),
-              
               const SizedBox(height: 20),
-              
-              // Title
               Text(
                 title,
                 textAlign: TextAlign.center,
@@ -246,7 +241,6 @@ class DialogUtils {
               
               const SizedBox(height: 12),
               
-              // Message
               Text(
                 message,
                 textAlign: TextAlign.center,
@@ -258,7 +252,6 @@ class DialogUtils {
               
               const SizedBox(height: 24),
               
-              // Buttons
               Row(
                 children: [
                   Expanded(
@@ -298,7 +291,6 @@ class DialogUtils {
     );
   }
 
-  /// Shows a loading dialog
   static void showLoadingDialog({
     required BuildContext context,
     String? message,
@@ -342,7 +334,6 @@ class DialogUtils {
     );
   }
 
-  /// Dismiss the current dialog
   static void dismissDialog(BuildContext context) {
     Navigator.of(context).pop();
   }
