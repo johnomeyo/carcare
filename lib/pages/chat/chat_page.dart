@@ -2,6 +2,8 @@ import 'package:carcare/providers/chat_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'presentation/widgets/empty_state.dart';
+
 class ChatPage extends StatelessWidget {
   const ChatPage({super.key});
 
@@ -17,10 +19,17 @@ class ChatPage extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // Expanded list of chat messages
             Expanded(
               child: Consumer<ChatProvider>(
                 builder: (context, chatProvider, child) {
+                  if (chatProvider.messages.isEmpty) {
+                    return const EmptyState(
+                      imagePath: 'lib/assets/bot.png',
+                      title: 'Start a Conversation',
+                      description: 'Ask me anything about your car maintenance, diagnostics, or get risk analysis for potential issues.',
+                    );
+                  }
+                  
                   return ListView.builder(
                     itemCount: chatProvider.messages.length,
                     itemBuilder: (context, index) {
@@ -30,7 +39,6 @@ class ChatPage extends StatelessWidget {
                 },
               ),
             ),
-            // Input field for sending a message
             ChatInputField(promptController: promptController),
           ],
         ),
@@ -75,12 +83,9 @@ class ChatInputField extends StatelessWidget {
               color: theme.colorScheme.onPrimary,
               onPressed: () {
                 var input = promptController.text.trim();
-                if (input.isEmpty) return; // Prevent sending empty messages
+                if (input.isEmpty) return;
                 
-                // Call sendMessage from ChatProvider
                 context.read<ChatProvider>().sendMessage(input);
-
-                // Clear input field after sending
                 promptController.clear();
               },
             ),

@@ -50,6 +50,7 @@ dependencies:
   google_maps_flutter: ^2.12.3
   file_picker: ^10.3.7
   image_picker: ^1.2.0
+  carousel_slider: ^5.1.1
 
 dev_dependencies:
   flutter_test:

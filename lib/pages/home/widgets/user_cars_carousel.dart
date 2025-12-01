@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:carousel_slider/carousel_slider.dart'; 
 import '../models/car_model.dart';
 import 'car_details_card.dart';
 
@@ -23,7 +24,7 @@ class UserCarsCarousel extends StatelessWidget {
         decoration: BoxDecoration(
           color: theme.cardColor,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: accentColor.withValues(alpha: 0.1), width: 1),
+          border: Border.all(color: accentColor.withValues(alpha: 0.1), width: 1), 
         ),
         child: Column(
           children: [
@@ -44,35 +45,47 @@ class UserCarsCarousel extends StatelessWidget {
               width: 200, 
               child: FilledButton(
                 onPressed: onAddCarPressed,
-                child:const Text("Add Your First Car"),
+                child: const Text("Add Your First Car"),
               ),
             ),
           ],
         ),
       );
     }
-
-    return SizedBox(
-      height: 200, 
-      child: PageView.builder(
-        controller: PageController(viewportFraction: 0.9), 
-        itemCount: cars.length,
-        itemBuilder: (context, index) {
-          final car = cars[index];
-          return GestureDetector(
-            onTap: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Tapped on ${car.carName}!'))
-              );
-            },
-            child: CarDetailsCard(
-              carName: car.carName,
-              plateNumber: car.plateNumber,
-              nextService: car.nextService,
-              imageUrl: car.imageUrl,
-            ),
-          );
-        },
+    
+    return CarouselSlider.builder(
+      itemCount: cars.length,
+      itemBuilder: (context, index, realIndex) {
+        final car = cars[index];
+        return Builder(
+          builder: (BuildContext context) {
+            return GestureDetector(
+              onTap: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Tapped on ${car.carName}!'))
+                );
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4.0), 
+                child: CarDetailsCard(
+                  carName: car.carName,
+                  plateNumber: car.plateNumber,
+                  nextService: car.nextService,
+                  imageUrl: car.imageUrl,
+                ),
+              ),
+            );
+          },
+        );
+      },
+      options: CarouselOptions(
+        height: 200, 
+        viewportFraction: 1, 
+        enlargeCenterPage: true, 
+        enableInfiniteScroll: true,
+        initialPage: 0,
+        scrollDirection: Axis.horizontal,
+        autoPlay: true
       ),
     );
   }

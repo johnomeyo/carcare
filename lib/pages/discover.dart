@@ -1,3 +1,4 @@
+import 'package:carcare/pages/chat/presentation/widgets/empty_state.dart';
 import 'package:carcare/pages/discover/service_station_card.dart';
 import 'package:carcare/pages/discover/toggle_buttons.dart';
 import 'package:flutter/material.dart';
@@ -41,12 +42,11 @@ class DiscoverPageState extends State<DiscoverPage> {
         ),
       ),
       body: filteredStations.isEmpty
-          ? Center(
-              child: Text(
-                textAlign: TextAlign.center,
-                "Sorry!! We couldn't find a garage with that service😶",
-                style: theme.textTheme.bodyLarge,
-              ),
+          ? const EmptyState(
+              imagePath: 'lib/assets/bot.png',
+              title: 'Ooops!!',
+              description:
+                  "We couldn't find any service stations offering the selected service. Please try a different category.",
             )
           : ListView.builder(
               itemCount: filteredStations.length,

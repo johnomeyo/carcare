@@ -1,5 +1,6 @@
 import 'package:carcare/features/car_wash/presentation/pages/car_wash_locator_page.dart';
 import 'package:carcare/features/inspection/presentation/inspection_page.dart';
+import 'package:carcare/pages/home/presentation/pages/add_car_page.dart';
 import 'package:carcare/pages/home/service_category.dart';
 import 'package:carcare/utils/dialogs_utils.dart';
 import 'package:flutter/material.dart';
@@ -23,75 +24,114 @@ class ServiceCategoryRow extends StatelessWidget {
             icon: Icons.receipt_long,
             onTap: () {
               DialogUtils.showConfirmDialog(
-                  context: context,
-                  title: "Unavailable",
-                  message: "This feature is coming soon!");
+                context: context,
+                title: "Unavailable",
+                message: "This feature is coming soon!",
+              );
             },
           ),
           const SizedBox(width: 16),
+
+          /// PARKING
           ServiceCategory(
             title: 'Parking',
             icon: Icons.ac_unit,
             onTap: () {
-              context.pushTransition(
-                type: PageTransitionType.rightToLeft,
-                child: const ParkingHomePage(),
+              Navigator.push(
+                context,
+                PageTransition(
+                  duration: const Duration(milliseconds: 500),
+                  reverseDuration: const Duration(milliseconds: 500),
+                  type: PageTransitionType.scale,
+                  alignment: Alignment.centerRight,
+                  child: const ParkingHomePage(),
+                ),
               );
             },
           ),
           const SizedBox(width: 16),
+
+          /// INSPECTION
           ServiceCategory(
             title: 'Inspection',
             icon: Icons.settings,
             onTap: () {
-              context.pushTransition(
-                type: PageTransitionType.rightToLeft,
-                child: const InspectionPage(),
+              Navigator.push(
+                context,
+                PageTransition(
+                  duration: const Duration(milliseconds: 500),
+                  reverseDuration: const Duration(milliseconds: 500),
+                  type: PageTransitionType.scale,
+                  alignment: Alignment.centerRight,
+                  child: const InspectionPage(),
+                ),
               );
             },
           ),
           const SizedBox(width: 16),
+
+          /// ADD CAR
           ServiceCategory(
-            title: 'Repair',
-            icon: Icons.car_repair,
+            title: 'Add Car',
+            icon: Icons.car_rental,
             onTap: () {
-              DialogUtils.showConfirmDialog(
-                  context: context,
-                  title: "Unavailable",
-                  message: "This feature is coming soon!");
+              Navigator.push(
+                context,
+                PageTransition(
+                  duration: const Duration(milliseconds: 500),
+                  reverseDuration: const Duration(milliseconds: 500),
+                  type: PageTransitionType.scale,
+                  alignment: Alignment.centerRight,
+                  child: const VehicleOnboardingPage(),
+                ),
+              );
             },
           ),
           const SizedBox(width: 16),
+
+          /// CAR WASH
           ServiceCategory(
             title: 'Car Wash',
             icon: Icons.local_car_wash,
             onTap: () {
-              context.pushTransition(
-                type: PageTransitionType.rightToLeft,
-                child: const CarwashLocatorPage(),
+              Navigator.push(
+                context,
+                PageTransition(
+                  duration: const Duration(milliseconds: 500),
+                  reverseDuration: const Duration(milliseconds: 500),
+                  type: PageTransitionType.scale,
+                  alignment: Alignment.centerRight,
+                  child: const CarwashLocatorPage(),
+                ),
               );
             },
           ),
           const SizedBox(width: 16),
+
+          /// TIRE CHECK
           ServiceCategory(
             title: 'Tire Check',
             icon: Icons.tire_repair,
             onTap: () {
               DialogUtils.showConfirmDialog(
-                  context: context,
-                  title: "Unavailable",
-                  message: "This feature is coming soon!");
+                context: context,
+                title: "Unavailable",
+                message: "This feature is coming soon!",
+              );
             },
           ),
           const SizedBox(width: 16),
+
+          /// BATTERY
           ServiceCategory(
             title: 'Battery',
             icon: Icons.battery_charging_full,
             onTap: () {
               DialogUtils.showConfirmDialog(
-                  context: context,
-                  title: "Unavailable",
-                  message: "This feature is coming soon!");
+                context: context,
+                title: "Unavailable",
+                message: "This feature is coming soon!",
+              );
             },
           ),
         ],

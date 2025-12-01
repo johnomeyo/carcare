@@ -1,17 +1,17 @@
-import 'package:carcare/pages/home/models/car_model.dart';
 import 'package:carcare/pages/home/popular_section.dart';
 import 'package:carcare/pages/home/presentation/pages/add_car_page.dart';
+import 'package:carcare/pages/home/promo_card.dart';
 import 'package:carcare/pages/home/widgets/user_cars_carousel.dart';
 import 'package:carcare/pages/notifications/notifications_page.dart';
 import 'package:carcare/pages/widgets/heading.dart';
-import 'package:carcare/pages/home/work_shop_explore.dart';
 import 'package:carcare/pages/home/location.dart';
 import 'package:carcare/providers/location_provider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:carcare/pages/home/category_section.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
+
+import 'models/car_model.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -37,7 +37,9 @@ class _HomepageState extends State<Homepage> {
                     currentLocation: locationProvider.locationString)
                 : const Text("Fetching location..."),
             const SizedBox(height: 20),
-            const WorkShopExplore(),
+            const Heading(heading: "Chat"),
+            const SizedBox(height: 20),
+            const PromoCard(),
             const SizedBox(height: 20),
             const Heading(heading: "My Garage"),
             const SizedBox(
@@ -45,25 +47,31 @@ class _HomepageState extends State<Homepage> {
             ),
             UserCarsCarousel(
                 cars: const [
-                  // Car(
-                  //     carName: 'BMW X5',
-                  //     plateNumber: 'ABC-1234',
-                  //     nextService: '2024-09-15',
-                  //     imageUrl:
-                  //         'https://images.unsplash.com/photo-1617531653332-bd46c24f2068?q=80&w=1815&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                  //     id: '1'),
-                  // Car(
-                  //     carName: 'BMW X5',
-                  //     plateNumber: 'ABC-1234',
-                  //     nextService: '2024-09-15',
-                  //     imageUrl:
-                  //         'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                  //     id: '1'),
+                  Car(
+                      carName: 'BMW M3 Copmetition',
+                      plateNumber: 'JAX01',
+                      nextService: '2024-09-15',
+                      imageUrl:
+                          'https://images.unsplash.com/photo-1617531653332-bd46c24f2068?q=80&w=1815&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                      id: '1'),
+                  Car(
+                      carName: 'Audi R8 V10',
+                      plateNumber: 'JAX02',
+                      nextService: '2024-09-15',
+                      imageUrl:
+                          'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                      id: '1'),
                 ],
                 onAddCarPressed: () {
-                  context.pushTransition(
-                    type: PageTransitionType.bottomToTop,
-                    child: const VehicleOnboardingPage(),
+                  Navigator.push(
+                    context,
+                    PageTransition(
+                      duration: const Duration(milliseconds: 500),
+                      reverseDuration: const Duration(milliseconds: 500),
+                      type: PageTransitionType.scale,
+                      alignment: Alignment.center,
+                      child: const VehicleOnboardingPage(),
+                    ),
                   );
                 }),
             const SizedBox(height: 20),
@@ -94,8 +102,13 @@ class _HomepageState extends State<Homepage> {
             onPressed: () {
               Navigator.push(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) => const NotificationsPage()));
+                  PageTransition(
+                    duration: const Duration(milliseconds: 500),
+                    reverseDuration: const Duration(milliseconds: 500),
+                    type: PageTransitionType.scale,
+                    alignment: Alignment.topRight,
+                    child: const NotificationsPage(),
+                  ));
             },
             icon: const Icon(Icons.notifications))
       ],
@@ -109,7 +122,7 @@ class _AppBarTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final username = FirebaseAuth.instance.currentUser!.displayName;
+    // final username = FirebaseAuth.instance.currentUser!.displayName;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
