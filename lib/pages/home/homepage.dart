@@ -1,6 +1,5 @@
 import 'package:carcare/pages/home/models/car_model.dart';
 import 'package:carcare/pages/home/popular_section.dart';
-import 'package:carcare/pages/home/widgets/car_details_card.dart';
 import 'package:carcare/pages/home/widgets/user_cars_carousel.dart';
 import 'package:carcare/pages/notifications/notifications_page.dart';
 import 'package:carcare/pages/widgets/heading.dart';
@@ -110,8 +109,8 @@ class _AppBarTitle extends StatelessWidget {
           style: theme.textTheme.bodyLarge,
         ),
         Text(
-          // "John",
-          username ?? "Back",
+          "John",
+          // username ?? "Back",
           style: theme.textTheme.headlineSmall?.copyWith(
             fontWeight: FontWeight.bold,
           ),

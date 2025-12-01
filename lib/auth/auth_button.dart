@@ -1,5 +1,6 @@
 import 'package:carcare/auth/auth_methods.dart';
 import 'package:carcare/main.dart';
+import 'package:carcare/utils/dialogs_utils.dart';
 import 'package:flutter/material.dart';
 
 class AuthButton extends StatefulWidget {
@@ -33,16 +34,25 @@ class AuthButtonState extends State<AuthButton> {
       if (widget.isLogin) {
         await AuthMethods().signIn(email: email, password: password);
         // Handle successful login, e.g., navigate to the home screen
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const MainScreen()));
       } else {
         await AuthMethods().createUser(email: email, password: password);
-        
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>const MainScreen()));
+
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const MainScreen()));
         // Handle successful sign-up, e.g., navigate to the verification screen
       }
     } catch (e) {
       // Show error message to the user
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Authentication failed: $e')),
+      DialogUtils.showErrorDialog(
+        context: context,
+        title: "Login Failed",
+        message: "Invalid email or password. Please try again.",
+        buttonText: "Try Again",
+        onDismiss: () {
+          // Optional callback when dismissed
+        },
       );
     } finally {
       setState(() {
@@ -58,7 +68,7 @@ class AuthButtonState extends State<AuthButton> {
       child: FilledButton(
         onPressed: _isLoading ? null : _authenticate,
         child: _isLoading
-            ?const CircularProgressIndicator.adaptive()
+            ? const CircularProgressIndicator.adaptive()
             : Text(widget.isLogin ? 'Login' : 'Sign Up'),
       ),
     );

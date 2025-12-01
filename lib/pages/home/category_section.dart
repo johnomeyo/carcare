@@ -4,6 +4,8 @@ import 'package:carcare/pages/home/service_category.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 
+import '../../features/parking/presentation/pages/parking_homepage.dart';
+
 class ServiceCategoryRow extends StatelessWidget {
   const ServiceCategoryRow({super.key});
 
@@ -22,9 +24,15 @@ class ServiceCategoryRow extends StatelessWidget {
           ),
           const SizedBox(width: 16),
           ServiceCategory(
-            title: 'AC Service',
+            title: 'Parking',
             icon: Icons.ac_unit,
-            onTap: () {},
+            onTap: () {
+              context.pushTransition(
+                type: PageTransitionType.rightToLeft,
+                child: const ParkingHomePage(),
+              );
+            }
+            ,
           ),
           const SizedBox(width: 16),
           ServiceCategory(
