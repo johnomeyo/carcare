@@ -1,28 +1,29 @@
 import 'package:carcare/auth/auth_check.dart';
+import 'package:carcare/di/get_it.dart';
+import 'package:carcare/features/expenses/presentation/bloc/expense_bloc.dart';
+import 'package:carcare/features/expenses/presentation/bloc/expense_event.dart';
 import 'package:carcare/firebase_options.dart';
 import 'package:carcare/pages/discover.dart';
 import 'package:carcare/pages/home/homepage.dart';
 import 'package:carcare/pages/profile/profile.dart';
-import 'package:carcare/providers/chat_provider.dart';
-import 'package:carcare/providers/location_provider.dart';
 import 'package:carcare/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  await setupServiceLocator();
   runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => ChatProvider()),
-              ChangeNotifierProvider(create: (_) => LocationProvider()),
-      ],
-      child: const MyApp(),
-    ),
+    MultiBlocProvider(providers: [
+      BlocProvider<ExpenseBloc>(
+        create: (context) => sl<ExpenseBloc>()..add(LoadExpenses()),
+      ),
+    ], child: const MyApp()),
   );
 }
 

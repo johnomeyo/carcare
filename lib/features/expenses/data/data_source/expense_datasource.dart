@@ -3,38 +3,27 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class ExpenseDatasource {
-  Future<void> createExpense(ExpenseModel expenseModel) async {
-    final userId = FirebaseAuth.instance.currentUser?.uid;
+  Future<void> createExpense(ExpenseModel model) async {
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+
     await FirebaseFirestore.instance
         .collection('users')
-        .doc(userId)
+        .doc(uid)
         .collection('expenses')
-        .add(expenseModel.toJson());
+        .add(model.toJson());
   }
-}
 
-Future<List<ExpenseModel>> fetchExpenses() async {
-  final userId = FirebaseAuth.instance.currentUser?.uid;
-  final querySnapshot = await FirebaseFirestore.instance
-      .collection('users')
-      .doc(userId)
-      .collection('expenses')
-      .get();
+  Future<List<ExpenseModel>> fetchExpenses() async {
+    final uid = FirebaseAuth.instance.currentUser!.uid;
 
-  return querySnapshot.docs.map((doc) {
-    final data = doc.data();
-    return ExpenseModel(
-      id: doc.id,
-      name: data['name'],
-      category: data['category'],
-      amount: data['amount'],
-      date: DateTime.parse(data['date']),
-      location: data['location'],
-      paymentMethod: data['paymentMethod'],
-      notes: data['notes'],
-      createdAt: DateTime.parse(data['createdAt']),
-      updatedAt:
-          data['updatedAt'] != null ? DateTime.parse(data['updatedAt']) : null,
-    );
-  }).toList();
+    final snapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection('expenses')
+        .get();
+
+    return snapshot.docs
+        .map((doc) => ExpenseModel.fromJson(doc.data(), doc.id))
+        .toList();
+  }
 }

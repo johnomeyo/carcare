@@ -1,8 +1,11 @@
-import 'package:carcare/features/expenses/data/data_source/expense_datasource.dart';
-import 'package:carcare/features/expenses/data/models/expense_model.dart';
+import 'package:carcare/features/expenses/dormain/entities/expense_entity.dart';
+import 'package:carcare/features/expenses/presentation/bloc/expense_bloc.dart';
+import 'package:carcare/features/expenses/presentation/bloc/expense_event.dart';
+import 'package:carcare/features/expenses/presentation/bloc/expense_state.dart';
 import 'package:carcare/utils/dialogs_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AddExpensePage extends StatefulWidget {
   const AddExpensePage({super.key});
@@ -13,12 +16,11 @@ class AddExpensePage extends StatefulWidget {
 
 class _AddExpensePageState extends State<AddExpensePage> {
   final _formKey = GlobalKey<FormState>();
+
   final _nameController = TextEditingController();
-  final _categoryController = TextEditingController();
   final _amountController = TextEditingController();
   final _dateController = TextEditingController();
   final _locationController = TextEditingController();
-  final _paymentMethodController = TextEditingController();
   final _notesController = TextEditingController();
 
   String? _selectedCategory;
@@ -34,7 +36,6 @@ class _AddExpensePageState extends State<AddExpensePage> {
     'Car Loan Payment',
     'Registration & Licensing',
   ];
-
   final List<String> _paymentMethods = [
     'Cash',
     'Credit Card',
@@ -47,18 +48,6 @@ class _AddExpensePageState extends State<AddExpensePage> {
   void initState() {
     super.initState();
     _dateController.text = _formatDate(DateTime.now());
-  }
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _categoryController.dispose();
-    _amountController.dispose();
-    _dateController.dispose();
-    _locationController.dispose();
-    _paymentMethodController.dispose();
-    _notesController.dispose();
-    super.dispose();
   }
 
   String _formatDate(DateTime date) {
@@ -82,7 +71,6 @@ class _AddExpensePageState extends State<AddExpensePage> {
         );
       },
     );
-
     if (selected != null) {
       setState(() {
         _dateController.text = _formatDate(selected);
@@ -90,11 +78,12 @@ class _AddExpensePageState extends State<AddExpensePage> {
     }
   }
 
-  void _saveExpense() async {
+  void saveExpense() {
     if (_formKey.currentState!.validate()) {
-      final expenseModel = ExpenseModel(
+      final expense = Expense(
+        id: '',
         name: _nameController.text.trim(),
-        category: _selectedCategory ?? 'Uncategorized',
+        category: _selectedCategory!,
         amount: double.parse(_amountController.text.trim()),
         date: DateTime.now(),
         location: _locationController.text.trim().isEmpty
@@ -106,130 +95,119 @@ class _AddExpensePageState extends State<AddExpensePage> {
             : _notesController.text.trim(),
         createdAt: DateTime.now(),
         updatedAt: null,
-        id: '',
       );
-      try {
-        await ExpenseDatasource().createExpense(expenseModel);
-        DialogUtils.showSuccessDialog(
-          context: context,
-          title: 'Error',
-          message: 'Failed to add expense. Please try again .',
-        );
-      } catch (e) {
-        DialogUtils.showErrorDialog(
-          context: context,
-          title: 'Error',
-          message: 'Failed to add expense. Please try again $e.',
-        );
-        return;
-      }
 
-      // DialogUtils.showSuccessDialog(
-      //   context: context,
-      //   title: 'Success',
-      //   buttonText: 'Done',
-      //   message: 'Expense added successfully!',
-      // );
+      context.read<ExpenseBloc>().add(AddExpenseEvent(expense));
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    return BlocListener<ExpenseBloc, ExpenseState>(
+      listener: (context, state) {
+        if (state is ExpenseLoading) {
+          DialogUtils.showLoadingDialog(context: context);
+        }
 
-    return Scaffold(
-      backgroundColor: colorScheme.surface,
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: colorScheme.surface,
-        foregroundColor: colorScheme.onSurface,
-        title: Text(
-          'Add Expense',
-          style: theme.textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.w600,
+        if (state is ExpenseLoaded) {
+          Navigator.pop(context);
+          DialogUtils.showSuccessDialog(
+            context: context,
+            title: 'Success',
+            message: 'Expense added successfully!',
+          );
+          Navigator.pop(context);
+        }
+
+        if (state is ExpenseError) {
+          Navigator.pop(context);
+          DialogUtils.showErrorDialog(
+            context: context,
+            title: 'Error',
+            message: state.message,
+          );
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(title: const Text('Add Expense')),
+        body: Form(
+          key: _formKey,
+          child: ListView(
+            padding: const EdgeInsets.all(25),
+            children: [
+              ExpenseTextField(
+                label: 'Expense Name',
+                controller: _nameController,
+                hint: 'e.g., Lunch at restaurant',
+                icon: Icons.receipt_long_outlined,
+                isRequired: true,
+              ),
+              const SizedBox(height: 16),
+              ExpenseDropdownField(
+                label: 'Category',
+                value: _selectedCategory,
+                items: _categories,
+                icon: Icons.category_outlined,
+                hint: 'Select category',
+                onChanged: (value) {
+                  setState(() {
+                    _selectedCategory = value;
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+              ExpenseTextField(
+                label: 'Amount',
+                controller: _amountController,
+                hint: '0.00',
+                icon: Icons.attach_money,
+                keyboardType: TextInputType.number,
+                isRequired: true,
+                prefix: 'KES ',
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
+                ],
+              ),
+              const SizedBox(height: 16),
+              ExpenseDateField(
+                label: 'Date',
+                controller: _dateController,
+                onTap: _selectDate,
+              ),
+              const SizedBox(height: 16),
+              ExpenseTextField(
+                label: 'Location',
+                controller: _locationController,
+                hint: 'e.g., Nairobi CBD',
+                icon: Icons.location_on_outlined,
+                isRequired: false,
+              ),
+              const SizedBox(height: 16),
+              ExpenseDropdownField(
+                label: 'Payment Method',
+                value: _selectedPaymentMethod,
+                items: _paymentMethods,
+                icon: Icons.payment_outlined,
+                hint: 'Select payment method',
+                isRequired: false,
+                onChanged: (value) {
+                  setState(() {
+                    _selectedPaymentMethod = value;
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+              ExpenseTextField(
+                label: 'Notes',
+                controller: _notesController,
+                hint: 'Add any additional notes...',
+                maxLines: 4,
+                isRequired: false,
+              ),
+              const SizedBox(height: 32),
+              SaveButton(onPressed: saveExpense),
+            ],
           ),
-        ),
-        centerTitle: true,
-      ),
-      body: Form(
-        key: _formKey,
-        child: ListView(
-          padding: const EdgeInsets.all(25),
-          children: [
-            ExpenseTextField(
-              label: 'Expense Name',
-              controller: _nameController,
-              hint: 'e.g., Lunch at restaurant',
-              icon: Icons.receipt_long_outlined,
-              isRequired: true,
-            ),
-            const SizedBox(height: 16),
-            ExpenseDropdownField(
-              label: 'Category',
-              value: _selectedCategory,
-              items: _categories,
-              icon: Icons.category_outlined,
-              hint: 'Select category',
-              onChanged: (value) {
-                setState(() {
-                  _selectedCategory = value;
-                });
-              },
-            ),
-            const SizedBox(height: 16),
-            ExpenseTextField(
-              label: 'Amount',
-              controller: _amountController,
-              hint: '0.00',
-              icon: Icons.attach_money,
-              keyboardType: TextInputType.number,
-              isRequired: true,
-              prefix: 'KES ',
-              inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
-              ],
-            ),
-            const SizedBox(height: 16),
-            ExpenseDateField(
-              label: 'Date',
-              controller: _dateController,
-              onTap: _selectDate,
-            ),
-            const SizedBox(height: 16),
-            ExpenseTextField(
-              label: 'Location',
-              controller: _locationController,
-              hint: 'e.g., Nairobi CBD',
-              icon: Icons.location_on_outlined,
-              isRequired: false,
-            ),
-            const SizedBox(height: 16),
-            ExpenseDropdownField(
-              label: 'Payment Method',
-              value: _selectedPaymentMethod,
-              items: _paymentMethods,
-              icon: Icons.payment_outlined,
-              hint: 'Select payment method',
-              isRequired: false,
-              onChanged: (value) {
-                setState(() {
-                  _selectedPaymentMethod = value;
-                });
-              },
-            ),
-            const SizedBox(height: 16),
-            ExpenseTextField(
-              label: 'Notes',
-              controller: _notesController,
-              hint: 'Add any additional notes...',
-              maxLines: 4,
-              isRequired: false,
-            ),
-            const SizedBox(height: 32),
-            SaveButton(onPressed: _saveExpense),
-            const SizedBox(height: 20),
-          ],
         ),
       ),
     );
