@@ -1,5 +1,4 @@
 import 'package:carcare/features/expenses/presentation/widgets/expense_chart.dart';
-import 'package:carcare/features/expenses/presentation/widgets/expense_filter.dart';
 import 'package:carcare/features/expenses/presentation/widgets/expense_list.dart';
 import 'package:carcare/features/expenses/presentation/widgets/expense_search.dart';
 import 'package:carcare/features/expenses/presentation/widgets/expense_summary.dart';
@@ -21,7 +20,6 @@ class ExpenseDashboardPage extends StatelessWidget {
           SizedBox(height: 16),
           ExpenseSearchBar(),
           SizedBox(height: 16),
-          ExpenseFiltersSection(),
           SizedBox(height: 16),
           ExpenseChartsSection(),
           SizedBox(height: 16),

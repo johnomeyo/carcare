@@ -3,7 +3,6 @@ import 'package:carcare/pages/home/popular_section.dart';
 import 'package:carcare/pages/home/presentation/pages/add_car_page.dart';
 import 'package:carcare/pages/home/promo_card.dart';
 import 'package:carcare/pages/home/widgets/user_cars_carousel.dart';
-import 'package:carcare/pages/notifications/notifications_page.dart';
 import 'package:carcare/pages/widgets/heading.dart';
 import 'package:carcare/pages/home/location.dart';
 import 'package:carcare/providers/location_provider.dart';

@@ -30,7 +30,7 @@ class ServiceCategoryRow extends StatelessWidget {
                   duration: const Duration(milliseconds: 500),
                   reverseDuration: const Duration(milliseconds: 500),
                   type: PageTransitionType.scale,
-                  alignment: Alignment.centerRight,
+                  alignment: Alignment.bottomLeft,
                   child: const AddExpensePage(),
                 ),
               );
