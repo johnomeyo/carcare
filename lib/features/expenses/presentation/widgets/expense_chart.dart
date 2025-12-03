@@ -1,32 +1,114 @@
-import 'package:flutter/material.dart';
+import 'package:carcare/features/expenses/dormain/entities/expense_entity.dart';
+import 'package:carcare/features/expenses/presentation/bloc/expense_bloc.dart';
+import 'package:carcare/features/expenses/presentation/bloc/expense_event.dart';
+import 'package:carcare/features/expenses/presentation/bloc/expense_state.dart';
+import 'package:carcare/pages/chat/presentation/widgets/empty_state.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import 'package:shimmer/shimmer.dart';
 
-class ExpenseChartsSection extends StatelessWidget {
+class ExpenseChartsSection extends StatefulWidget {
   const ExpenseChartsSection({super.key});
 
   @override
+  State<ExpenseChartsSection> createState() => _ExpenseChartsSectionState();
+}
+
+class _ExpenseChartsSectionState extends State<ExpenseChartsSection> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<ExpenseBloc>().add(LoadExpenses());
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return const Column(
-      children: [
-        MonthlySpendingChart(),
-        SizedBox(height: 16),
-        CategoryDistributionChart(),
-      ],
+    return BlocBuilder<ExpenseBloc, ExpenseState>(
+      builder: (context, state) {
+        if (state is ExpenseLoading) {
+          return const Column(
+            children: [
+              ChartShimmer(),
+              SizedBox(height: 16),
+              ChartShimmer(),
+            ],
+          );
+        }
+
+        if (state is ExpenseError) {
+          return SizedBox(
+            height: 200,
+            child:
+                Center(child: Text('Error loading charts: ${state.message}')),
+          );
+        }
+
+        if (state is ExpenseLoaded) {
+          final List<Expense> expenses = state.expenses;
+          if (expenses.isEmpty) {
+            return const Center(child: EmptyState(imagePath: 'lib/assets/bot.png', title: "Ooops", description: "No expense data available to display charts."));
+          }
+
+          return Column(
+            children: [
+              MonthlySpendingChart(expenses: expenses),
+              const SizedBox(height: 16),
+              CategoryDistributionChart(expenses: expenses),
+            ],
+          );
+        }
+
+        return const SizedBox.shrink();
+      },
     );
   }
 }
 
 class MonthlySpendingChart extends StatelessWidget {
-  const MonthlySpendingChart({super.key});
+  final List<Expense> expenses;
+  const MonthlySpendingChart({super.key, required this.expenses});
+
+  Map<int, double> aggregateMonthlySpending() {
+    final Map<int, double> monthlyTotals = {};
+    for (var expense in expenses) {
+      final month = expense.date.month;
+      monthlyTotals.update(
+        month,
+        (existingTotal) => existingTotal + expense.amount,
+        ifAbsent: () => expense.amount,
+      );
+    }
+    return monthlyTotals;
+  }
 
   @override
   Widget build(BuildContext context) {
+    final monthlyData = aggregateMonthlySpending();
+    final List<FlSpot> spots = [];
+
+    final now = DateTime.now();
+    final monthKeys = monthlyData.keys.toList()..sort();
+
+    for (int i = 0; i < monthKeys.length; i++) {
+      final month = monthKeys[i];
+      spots.add(FlSpot(i.toDouble(), monthlyData[month]!));
+    }
+
+    final maxY = monthlyData.values.isEmpty
+        ? 1000.0
+        : monthlyData.values.reduce((a, b) => a > b ? a : b) * 1.2;
+
+    final List<String> displayedMonths = monthKeys
+        .map((m) => DateFormat.MMM().format(DateTime(now.year, m)))
+        .toList();
+
     return Card(
       child: Container(
         height: 220,
         padding: const EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               "Monthly Spending",
@@ -38,51 +120,17 @@ class MonthlySpendingChart extends StatelessWidget {
             Expanded(
               child: LineChart(
                 LineChartData(
-                  gridData: FlGridData(
-                    // show: true,
-                    drawVerticalLine: false,
-                    horizontalInterval: 200,
-                    getDrawingHorizontalLine: (value) {
-                      return FlLine(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withValues(alpha: 0.1),
-                        strokeWidth: 1,
-                      );
-                    },
-                  ),
                   titlesData: FlTitlesData(
-                    leftTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        reservedSize: 40,
-                        getTitlesWidget: (value, meta) {
-                          return Text(
-                            '${value.toInt()}',
-                            style: const TextStyle(fontSize: 10),
-                          );
-                        },
-                      ),
-                    ),
                     bottomTitles: AxisTitles(
                       sideTitles: SideTitles(
                         showTitles: true,
                         getTitlesWidget: (value, meta) {
-                          const months = [
-                            'Jan',
-                            'Feb',
-                            'Mar',
-                            'Apr',
-                            'May',
-                            'Jun'
-                          ];
-                          if (value.toInt() >= 0 &&
-                              value.toInt() < months.length) {
+                          final index = value.toInt();
+                          if (index >= 0 && index < displayedMonths.length) {
                             return Padding(
                               padding: const EdgeInsets.only(top: 8.0),
                               child: Text(
-                                months[value.toInt()],
+                                displayedMonths[index],
                                 style: const TextStyle(fontSize: 10),
                               ),
                             );
@@ -98,29 +146,21 @@ class MonthlySpendingChart extends StatelessWidget {
                       sideTitles: SideTitles(showTitles: false),
                     ),
                   ),
-                  borderData: FlBorderData(show: false),
                   lineBarsData: [
                     LineChartBarData(
-                      spots: const [
-                        FlSpot(0, 350),
-                        FlSpot(1, 420),
-                        FlSpot(2, 280),
-                        FlSpot(3, 560),
-                        FlSpot(4, 490),
-                        FlSpot(5, 610),
-                      ],
+                      spots: spots,
                       isCurved: true,
                       color: Colors.blue,
                       barWidth: 3,
                       dotData: const FlDotData(show: true),
                       belowBarData: BarAreaData(
                         show: true,
-                        color: Colors.blue.withValues(alpha: 0.1),
+                        color: Colors.blue.withOpacity(0.1),
                       ),
                     ),
                   ],
                   minY: 0,
-                  maxY: 800,
+                  maxY: maxY,
                 ),
               ),
             ),
@@ -132,24 +172,69 @@ class MonthlySpendingChart extends StatelessWidget {
 }
 
 class CategoryDistributionChart extends StatelessWidget {
-  const CategoryDistributionChart({super.key});
+  final List<Expense> expenses;
+  const CategoryDistributionChart({super.key, required this.expenses});
+
+  Map<String, double> aggregateCategorySpending() {
+    final Map<String, double> categoryTotals = {};
+    for (var expense in expenses) {
+      categoryTotals.update(
+        expense.category,
+        (existingTotal) => existingTotal + expense.amount,
+        ifAbsent: () => expense.amount,
+      );
+    }
+    return categoryTotals;
+  }
+
+  final Map<String, Color> categoryColors = const {
+    'Fuel': Colors.blue,
+    'Maintenance & Repairs': Colors.red,
+    'Car Insurance': Colors.orange,
+    'Parking Fees': Colors.purple,
+    'Car Wash': Colors.teal,
+    'Tolls & Highway Fees': Colors.cyan,
+    'Car Loan Payment': Colors.pink,
+    'Registration & Licensing': Colors.brown,
+  };
 
   @override
   Widget build(BuildContext context) {
+    final categoryTotals = aggregateCategorySpending();
+    final totalSpending =
+        categoryTotals.values.fold(0.0, (sum, item) => sum + item);
+
+    final List<PieChartSectionData> sections = [];
+    final List<Widget> legendItems = [];
+
+    categoryTotals.forEach((category, amount) {
+      final percentage = (amount / totalSpending) * 100;
+      final color = categoryColors[category] ?? Colors.grey;
+
+      sections.add(
+        PieChartSectionData(
+          value: amount,
+          title: '${percentage.toStringAsFixed(0)}%',
+          color: color,
+          radius: 50,
+          titleStyle: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+      );
+
+      legendItems.add(_buildLegendItem(color, category, amount));
+      legendItems.add(const SizedBox(height: 8));
+    });
+
     return Card(
       child: Container(
         height: 220,
         padding: const EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              "Category Distribution",
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            const SizedBox(height: 16),
             Expanded(
               child: Row(
                 children: [
@@ -157,52 +242,7 @@ class CategoryDistributionChart extends StatelessWidget {
                     flex: 2,
                     child: PieChart(
                       PieChartData(
-                        sections: [
-                          PieChartSectionData(
-                            value: 35,
-                            title: '35%',
-                            color: Colors.blue,
-                            radius: 50,
-                            titleStyle: const TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                          PieChartSectionData(
-                            value: 25,
-                            title: '25%',
-                            color: Colors.green,
-                            radius: 50,
-                            titleStyle: const TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                          PieChartSectionData(
-                            value: 20,
-                            title: '20%',
-                            color: Colors.orange,
-                            radius: 50,
-                            titleStyle: const TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                          PieChartSectionData(
-                            value: 20,
-                            title: '20%',
-                            color: Colors.red,
-                            radius: 50,
-                            titleStyle: const TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
+                        sections: sections,
                         sectionsSpace: 2,
                         centerSpaceRadius: 35,
                       ),
@@ -214,15 +254,7 @@ class CategoryDistributionChart extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildLegendItem(Colors.blue, 'Food'),
-                        const SizedBox(height: 8),
-                        _buildLegendItem(Colors.green, 'Transport'),
-                        const SizedBox(height: 8),
-                        _buildLegendItem(Colors.orange, 'Shopping'),
-                        const SizedBox(height: 8),
-                        _buildLegendItem(Colors.red, 'Bills'),
-                      ],
+                      children: legendItems,
                     ),
                   ),
                 ],
@@ -234,7 +266,7 @@ class CategoryDistributionChart extends StatelessWidget {
     );
   }
 
-  Widget _buildLegendItem(Color color, String label) {
+  Widget _buildLegendItem(Color color, String label, double amount) {
     return Row(
       children: [
         Container(
@@ -248,11 +280,65 @@ class CategoryDistributionChart extends StatelessWidget {
         const SizedBox(width: 8),
         Flexible(
           child: Text(
-            label,
+            '$label (${amount.toStringAsFixed(0)})',
             style: const TextStyle(fontSize: 12),
           ),
         ),
       ],
+    );
+  }
+}
+
+
+class ChartShimmer extends StatelessWidget {
+  const ChartShimmer({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    
+    final baseColor = isDark 
+        ? theme.colorScheme.surfaceContainerHighest 
+        : Colors.grey.shade300;
+    final highlightColor = isDark 
+        ? theme.colorScheme.surface 
+        : Colors.grey.shade100;
+
+    return Card(
+      child: Container(
+        height: 220,
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            Shimmer.fromColors(
+              baseColor: baseColor,
+              highlightColor: highlightColor,
+              child: Container(
+                width: 120,
+                height: 16,
+                decoration: BoxDecoration(
+                  color: baseColor,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Expanded(
+              child: Shimmer.fromColors(
+                baseColor: baseColor,
+                highlightColor: highlightColor,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: baseColor,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

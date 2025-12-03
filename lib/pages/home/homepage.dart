@@ -24,18 +24,18 @@ class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final locationProvider = Provider.of<LocationProvider>(context);
+    // final locationProvider = Provider.of<LocationProvider>(context);
     return Scaffold(
       appBar: _buildAppBar(theme, context),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: ListView(
           children: [
-            const SizedBox(height: 10),
-            locationProvider.locationString != null
-                ? LocationIndicator(
-                    currentLocation: locationProvider.locationString)
-                : const Text("Fetching location..."),
+            // const SizedBox(height: 10),
+            // locationProvider.locationString != null
+            //     ? LocationIndicator(
+            //         currentLocation: locationProvider.locationString)
+            //     : const Text("Fetching location..."),
             const SizedBox(height: 20),
             const Heading(heading: "Chat"),
             const SizedBox(height: 20),

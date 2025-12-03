@@ -13,18 +13,22 @@ class ExpenseDashboardPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Expense Dashboard"),
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: const [
-          ExpenseSummarySection(),
-          SizedBox(height: 16),
-          ExpenseSearchBar(),
-          SizedBox(height: 16),
-          SizedBox(height: 16),
-          ExpenseChartsSection(),
-          SizedBox(height: 16),
-          ExpenseListSection(),
-        ],
+      body: const SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              ExpenseSummarySection(),
+              SizedBox(height: 16),
+              ExpenseSearchBar(),
+              SizedBox(height: 16),
+              SizedBox(height: 16),
+              ExpenseChartsSection(),
+              SizedBox(height: 16),
+              ExpenseListSection(),
+            ],
+          ),
+        ),
       ),
     );
   }

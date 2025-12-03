@@ -6,6 +6,8 @@ class ExpenseInitial extends ExpenseState {}
 
 class ExpenseLoading extends ExpenseState {}
 
+class ExpenseAdded extends ExpenseState {}
+
 class ExpenseLoaded extends ExpenseState {
   final List<Expense> expenses;
   ExpenseLoaded(this.expenses);

@@ -1,5 +1,6 @@
 import 'package:carcare/features/expenses/data/data_source/expense_datasource.dart';
 import 'package:carcare/features/expenses/data/repositories/expense_repo_impl.dart';
+import 'package:carcare/features/expenses/dormain/repository/expense_repo.dart';
 import 'package:carcare/features/expenses/dormain/usecases/create_expense_usecase.dart';
 import 'package:carcare/features/expenses/dormain/usecases/fetch_expenses.dart';
 import 'package:carcare/features/expenses/presentation/bloc/expense_bloc.dart';
@@ -14,7 +15,7 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<ExpenseDatasource>(() => ExpenseDatasource());
 
   // Repositories
-  sl.registerLazySingleton<ExpenseRepositoryImpl>(
+  sl.registerLazySingleton<ExpenseRepository>(
       () => ExpenseRepositoryImpl(sl()));
 
   // Use Cases

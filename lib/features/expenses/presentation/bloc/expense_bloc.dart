@@ -34,7 +34,7 @@ class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
       AddExpenseEvent event, Emitter<ExpenseState> emit) async {
     try {
       await createExpense(event.expense);
-      add(LoadExpenses()); // reload list after creating
+      emit(ExpenseAdded());
     } catch (e) {
       emit(ExpenseError(e.toString()));
     }

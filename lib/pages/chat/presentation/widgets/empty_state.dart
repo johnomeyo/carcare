@@ -28,7 +28,6 @@ class EmptyState extends StatelessWidget {
               height: 150,
               fit: BoxFit.contain,
             ),
-            const SizedBox(height: 24),
             Text(
               title,
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
