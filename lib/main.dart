@@ -6,7 +6,7 @@ import 'package:carcare/features/parking/presentation/bloc/parking_event.dart';
 import 'package:carcare/firebase_options.dart';
 import 'package:carcare/pages/discover.dart';
 import 'package:carcare/pages/home/homepage.dart';
-import 'package:carcare/pages/profile/profile.dart';
+import 'package:carcare/pages/home/presentation/features/add_car/data/bloc/vehicle_bloc.dart';
 import 'package:carcare/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +29,7 @@ void main() async {
       BlocProvider(
         create: (_) => sl<ParkingBloc>()..add(LoadParkingSpots()),
       ),
+      BlocProvider(create: (_)=> sl<VehicleBloc>()),
     ], child: const MyApp()),
   );
 }

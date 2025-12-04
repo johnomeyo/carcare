@@ -1,7 +1,7 @@
 import 'package:carcare/features/car_wash/presentation/pages/car_wash_locator_page.dart';
 import 'package:carcare/features/expenses/presentation/pages/add_expense_page.dart';
 import 'package:carcare/features/inspection/presentation/inspection_page.dart';
-import 'package:carcare/pages/home/presentation/pages/add_car_page.dart';
+import 'package:carcare/pages/home/presentation/features/add_car/presentation/pages/add_car_page.dart';
 import 'package:carcare/pages/home/service_category.dart';
 import 'package:carcare/utils/dialogs_utils.dart';
 import 'package:flutter/material.dart';

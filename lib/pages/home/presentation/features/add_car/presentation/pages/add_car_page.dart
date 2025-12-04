@@ -1,10 +1,12 @@
 import 'package:carcare/pages/home/models/vehicle_data_model.dart';
+// import 'package:carcare/pages/home/presentation/features/add_car/data/bloc/vehicle_bloc.dart';
+// import 'package:carcare/pages/home/presentation/features/add_car/data/bloc/vehicle_event.dart';
+// import 'package:carcare/pages/home/presentation/features/add_car/domain/entities/vehicle_entity.dart';
 import 'package:flutter/material.dart';
-import 'pages/vehicle_documents_page.dart';
-import 'pages/vehicle_specs_page.dart';
-import 'pages/vehicle_photos.dart'; // Ensure you finish this file based on your previous snippet
-import '../../../../utils/dialogs_utils.dart';
-import 'pages/verify_vehicle_details.dart'; // Assuming this exists
+import 'vehicle_documents_page.dart';
+import 'vehicle_specs_page.dart';
+import 'vehicle_photos.dart';
+import 'verify_vehicle_details.dart';
 
 class VehicleOnboardingPage extends StatefulWidget {
   const VehicleOnboardingPage({super.key});
@@ -15,18 +17,17 @@ class VehicleOnboardingPage extends StatefulWidget {
 
 class _VehicleOnboardingPageState extends State<VehicleOnboardingPage> {
   final PageController _pageController = PageController();
-  
-  // 1. Create the single source of truth for data
+
   final VehicleData _vehicleData = VehicleData();
 
   final List<GlobalKey<FormState>> _formKeys = [
-    GlobalKey<FormState>(), 
     GlobalKey<FormState>(),
-    GlobalKey<FormState>(), 
+    GlobalKey<FormState>(),
+    GlobalKey<FormState>(),
   ];
 
   int _currentPage = 0;
-  final int _totalPages = 4; 
+  final int _totalPages = 4;
 
   @override
   void dispose() {
@@ -38,9 +39,9 @@ class _VehicleOnboardingPageState extends State<VehicleOnboardingPage> {
     if (_currentPage < _totalPages - 1) {
       if (_currentPage < _formKeys.length) {
         if (!_formKeys[_currentPage].currentState!.validate()) {
-          return; 
+          return;
         }
-        _formKeys[_currentPage].currentState!.save(); 
+        _formKeys[_currentPage].currentState!.save();
       }
 
       _pageController.nextPage(
@@ -48,16 +49,12 @@ class _VehicleOnboardingPageState extends State<VehicleOnboardingPage> {
         curve: Curves.easeIn,
       );
     } else {
-      _submitApplication();
+      submitApplication();
     }
   }
 
-  void _submitApplication() {
-    DialogUtils.showSuccessDialog(
-      context: context, 
-      title: 'Success!', 
-      message: "Your car has been successfully added!"
-    );
+  void submitApplication() {
+
   }
 
   void _goToPreviousPage() {
@@ -77,7 +74,8 @@ class _VehicleOnboardingPageState extends State<VehicleOnboardingPage> {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
             child: LinearProgressIndicator(
               value: (_currentPage + 1) / _totalPages,
               backgroundColor: colorScheme.primary.withOpacity(0.1),
@@ -100,19 +98,13 @@ class _VehicleOnboardingPageState extends State<VehicleOnboardingPage> {
                 switch (index) {
                   case 0:
                     return VehicleDocumentsPage(
-                      formKey: _formKeys[0], 
-                      data: _vehicleData
-                    );
+                        formKey: _formKeys[0], data: _vehicleData);
                   case 1:
                     return VehicleSpecificationsPage(
-                      formKey: _formKeys[1], 
-                      data: _vehicleData
-                    );
+                        formKey: _formKeys[1], data: _vehicleData);
                   case 2:
                     return VehiclePhotosPage(
-                      formKey: _formKeys[2], 
-                      data: _vehicleData
-                    );
+                        formKey: _formKeys[2], data: _vehicleData);
                   case 3:
                     return VehicleVerifyPage(
                       data: _vehicleData,

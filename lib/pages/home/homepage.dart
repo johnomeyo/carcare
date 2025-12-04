@@ -1,6 +1,6 @@
 import 'package:carcare/features/expenses/presentation/pages/expenses_dashboard.dart';
 import 'package:carcare/pages/home/popular_section.dart';
-import 'package:carcare/pages/home/presentation/pages/add_car_page.dart';
+import 'package:carcare/pages/home/presentation/features/add_car/presentation/pages/add_car_page.dart';
 import 'package:carcare/pages/home/promo_card.dart';
 import 'package:carcare/pages/home/widgets/user_cars_carousel.dart';
 import 'package:carcare/pages/profile/profile.dart';

@@ -9,7 +9,13 @@ import 'package:carcare/features/parking/data/repo/parking_repo_impl.dart';
 import 'package:carcare/features/parking/dormain/repositories/parking_repo.dart';
 import 'package:carcare/features/parking/dormain/usecases/fetch_spots_usecase.dart';
 import 'package:carcare/features/parking/presentation/bloc/parking_bloc.dart';
+import 'package:carcare/pages/home/presentation/features/add_car/data/bloc/vehicle_bloc.dart';
+import 'package:carcare/pages/home/presentation/features/add_car/data/repository/vehicle_data_repository.dart';
+import 'package:carcare/pages/home/presentation/features/add_car/data/vehicle_datasource.dart';
+import 'package:carcare/pages/home/presentation/features/add_car/domain/repositories/add_vehicle_repository.dart';
+import 'package:carcare/pages/home/presentation/features/add_car/domain/usecases/add_vehicle_usecase.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
 
 final sl = GetIt.instance;
@@ -34,7 +40,7 @@ Future<void> setupServiceLocator() async {
         fetchExpenses: sl(),
       ));
 
-        // -------------------------------
+  // -------------------------------
   // PARKING MODULE
   // -------------------------------
 
@@ -54,6 +60,27 @@ Future<void> setupServiceLocator() async {
       () => GetParkingSpotsStream(sl()));
 
   // Bloc
-  sl.registerFactory<ParkingBloc>(
-      () => ParkingBloc(sl()));
+  sl.registerFactory<ParkingBloc>(() => ParkingBloc(sl()));
+
+  //  VEHICLE MODULE
+
+  // Bloc
+  sl.registerFactory(() => VehicleBloc(submitVehicleUseCase: sl()));
+
+  // Use Cases
+  sl.registerLazySingleton(() => AddVehicleUsecase(sl()));
+
+  // Repository
+  sl.registerLazySingleton<VehicleRepository>(
+    () => VehicleRepositoryImpl(remoteDataSource: sl()),
+  );
+
+  // Data Sources
+  sl.registerLazySingleton<VehicleRemoteDataSource>(
+    () => VehicleRemoteDataSourceImpl(
+      firestore: sl(),
+      storage: sl(),
+    ),
+  );
+ sl.registerLazySingleton(  () => FirebaseStorage.instance);
 }

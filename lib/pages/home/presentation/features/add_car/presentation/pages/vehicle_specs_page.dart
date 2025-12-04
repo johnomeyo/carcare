@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../models/vehicle_data_model.dart';
+import '../../../../../models/vehicle_data_model.dart';
 
 // --- Theme Extensions for consistency ---
 // Move these extensions to a separate file (e.g., 'app_theme.dart')

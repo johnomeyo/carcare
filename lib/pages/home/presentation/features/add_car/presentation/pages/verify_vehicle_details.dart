@@ -1,6 +1,12 @@
 import 'dart:io';
 import 'package:carcare/pages/home/models/vehicle_data_model.dart';
+import 'package:carcare/pages/home/presentation/features/add_car/data/bloc/vehicle_bloc.dart';
+import 'package:carcare/pages/home/presentation/features/add_car/data/bloc/vehicle_event.dart';
+// Make sure to import your specific state file
+import 'package:carcare/pages/home/presentation/features/add_car/domain/entities/vehicle_entity.dart';
+import 'package:carcare/utils/dialogs_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class VehicleVerifyPage extends StatelessWidget {
   final VehicleData data;
@@ -24,33 +30,108 @@ class VehicleVerifyPage extends StatelessWidget {
             subtitle: 'Please verify the information below before submitting.',
           ),
           const SizedBox(height: 32),
-          
-          const SectionHeader(
-            title: 'Vehicle Specifications',
-          ),
+          const SectionHeader(title: 'Vehicle Specifications'),
           const SizedBox(height: 12),
           VehicleSpecsCard(data: data),
-          
           const SizedBox(height: 32),
-          
-          const SectionHeader(
-            title: 'Documents',
-          ),
+          const SectionHeader(title: 'Documents'),
           const SizedBox(height: 12),
           DocumentsCard(data: data),
-          
           const SizedBox(height: 32),
-          
-          const SectionHeader(
-            title: 'Vehicle Photo',
-          ),
+          const SectionHeader(title: 'Vehicle Photo'),
           const SizedBox(height: 12),
           VehiclePhotosGrid(photoPaths: data.photoPaths),
-          
           const SizedBox(height: 40),
+
+          Row(
+            children: [
+              Expanded(
+                child: BlocConsumer<VehicleBloc, VehicleState>(
+                  listener: (context, state) {
+                    if (state is VehicleSuccess) {
+                      DialogUtils.showSuccessDialog(
+                          onDismiss: () {
+                            Navigator.of(context)
+                                .popUntil((route) => route.isFirst);
+                          },
+                          context: context,
+                          title: 'Submission Failed',
+                          message: "Your vehicle has been added successfully.");
+                    } else if (state is VehicleFailure) {
+                      DialogUtils.showErrorDialog(
+                          context: context,
+                          title: 'Submission Failed',
+                          message: state.message);
+                    }
+                  },
+                  builder: (context, state) {
+                    if (state is VehicleLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+
+                    return FilledButton(
+                      onPressed: () => _onSubmitPressed(context),
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                      ),
+                      child: const Text(
+                        'Add Vehicle',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
+  }
+
+  // Refactored logic to keep the build method clean
+  void _onSubmitPressed(BuildContext context) {
+    final missing = <String>[];
+    void check(String? v, String name) {
+      if (v == null || v.isEmpty) missing.add(name);
+    }
+
+    check(data.registrationNumber, 'Registration number');
+    check(data.make, 'Make');
+    check(data.yearOfManufacture, 'Year of manufacture');
+    check(data.color, 'Color');
+    check(data.mileage, 'Mileage');
+    check(data.engineSize, 'Engine size');
+    check(data.chassisNumber, 'Chassis number');
+    check(data.transmission, 'Transmission');
+    check(data.steering, 'Steering');
+
+    if (missing.isNotEmpty) {
+      final msg = 'Please provide: ${missing.join(', ')}';
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(msg)),
+      );
+      return;
+    }
+
+    final vehicleEntity = VehicleEntity(
+      registrationNumber: data.registrationNumber!,
+      make: data.make!,
+      yearOfManufacture: data.yearOfManufacture!,
+      color: data.color!,
+      mileage: data.mileage!,
+      powerFuel: data.powerFuel ?? 'Fuel',
+      engineSize: data.engineSize!,
+      chassisNumber: data.chassisNumber!,
+      transmission: data.transmission!,
+      steering: data.steering!,
+      ntsaDocument: data.ntsaDocument,
+      insuranceDocument: data.insuranceDocument,
+      logbookDocument: data.logbookDocument,
+    );
+
+    // Trigger the event
+    context.read<VehicleBloc>().add(SubmitVehicleEvent(vehicleEntity));
   }
 }
 
@@ -67,7 +148,7 @@ class PageHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -98,13 +179,13 @@ class SectionHeader extends StatelessWidget {
   const SectionHeader({
     super.key,
     required this.title,
-     this.icon,
+    this.icon,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Row(
       children: [
         Visibility(
@@ -146,7 +227,7 @@ class VehicleSpecsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Container(
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
@@ -195,7 +276,7 @@ class InfoRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       child: Row(
@@ -232,7 +313,7 @@ class InfoDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Divider(
@@ -255,7 +336,7 @@ class DocumentsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Container(
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
@@ -300,7 +381,7 @@ class DocumentTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final hasFile = path != null && path!.isNotEmpty;
-    
+
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Row(
@@ -375,7 +456,7 @@ class VehiclePhotosGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     if (photoPaths.isEmpty) {
       return Container(
         padding: const EdgeInsets.all(32),
@@ -406,7 +487,7 @@ class VehiclePhotosGrid extends StatelessWidget {
         ),
       );
     }
-    
+
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
