@@ -4,12 +4,9 @@ import 'package:carcare/pages/home/presentation/pages/add_car_page.dart';
 import 'package:carcare/pages/home/promo_card.dart';
 import 'package:carcare/pages/home/widgets/user_cars_carousel.dart';
 import 'package:carcare/pages/widgets/heading.dart';
-import 'package:carcare/pages/home/location.dart';
-import 'package:carcare/providers/location_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:carcare/pages/home/category_section.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:provider/provider.dart';
 
 import 'models/car_model.dart';
 
@@ -24,18 +21,12 @@ class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    // final locationProvider = Provider.of<LocationProvider>(context);
     return Scaffold(
       appBar: _buildAppBar(theme, context),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: ListView(
           children: [
-            // const SizedBox(height: 10),
-            // locationProvider.locationString != null
-            //     ? LocationIndicator(
-            //         currentLocation: locationProvider.locationString)
-            //     : const Text("Fetching location..."),
             const SizedBox(height: 20),
             const Heading(heading: "Chat"),
             const SizedBox(height: 20),

@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'package:carcare/features/parking/dormain/entities/parking_spot_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class ParkingDetailsPage extends StatefulWidget {
-  const ParkingDetailsPage({super.key});
+  final ParkingSpotEntity spot;
+
+  const ParkingDetailsPage({super.key, required this.spot});
 
   @override
   State<ParkingDetailsPage> createState() => _ParkingDetailsPageState();
@@ -14,9 +17,6 @@ class _ParkingDetailsPageState extends State<ParkingDetailsPage> {
   bool isParkingStarted = false;
   Duration parkingDuration = Duration.zero;
   Timer? timer;
-
-  final LatLng parkingLocation = const LatLng(-1.2864, 36.8172); 
-  final double hourlyRate = 100.0;
 
   @override
   void dispose() {
@@ -30,7 +30,7 @@ class _ParkingDetailsPageState extends State<ParkingDetailsPage> {
       parkingDuration = Duration.zero;
     });
 
-    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    timer = Timer.periodic(const Duration(seconds: 1), (_) {
       setState(() {
         parkingDuration = Duration(seconds: parkingDuration.inSeconds + 1);
       });
@@ -47,69 +47,60 @@ class _ParkingDetailsPageState extends State<ParkingDetailsPage> {
 
   double calculateCurrentPrice() {
     final hours = parkingDuration.inSeconds / 3600;
-    return hours * hourlyRate;
+    return hours * widget.spot.hourlyRate;
   }
 
   @override
   Widget build(BuildContext context) {
+    final spot = widget.spot;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Parking Details"),
+        title: Text(spot.name),
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          const ParkingHeader(
-            name: "Central Mall Parking",
-            address: "123 Main Street, Nairobi",
-            distance: "200m away",
+          ParkingHeader(
+            name: spot.name,
+            address: spot.address,
+            distance: spot.distance,
           ),
+
           const SizedBox(height: 16),
+
+          // STATIC MAP IMAGE (Placeholder)
           Container(
             height: 250,
             decoration: BoxDecoration(
+              image: DecorationImage(
+                image: NetworkImage(spot.imageUrl.isNotEmpty
+                    ? spot.imageUrl
+                    : "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/World_map_blank_without_borders.svg/2560px-World_map_blank_without_borders.svg.png"),
+                fit: BoxFit.cover,
+              ),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.grey[300]!),
             ),
             clipBehavior: Clip.antiAlias,
-            child: GoogleMap(
-              initialCameraPosition: CameraPosition(
-                target: parkingLocation,
-                zoom: 15,
-              ),
-              markers: {
-                Marker(
-                  markerId: const MarkerId('parking_spot'),
-                  position: parkingLocation,
-                  infoWindow: const InfoWindow(title: 'Central Mall Parking'),
-                ),
-              },
-              myLocationEnabled: true,
-              myLocationButtonEnabled: true,
-              zoomControlsEnabled: false,
-            ),
           ),
-          // ParkingMapView(
-          //   parkingLocation: parkingLocation,
-          //   isNavigating: isNavigating,
-          // ),
+
           const SizedBox(height: 16),
+
           ParkingPriceCard(
-            hourlyRate: hourlyRate,
+            hourlyRate: spot.hourlyRate,
             currentPrice: calculateCurrentPrice(),
             isParkingStarted: isParkingStarted,
             parkingDuration: parkingDuration,
           ),
+
           const SizedBox(height: 24),
+
           ParkingActionButtons(
             isNavigating: isNavigating,
             isParkingStarted: isParkingStarted,
             onNavigate: () {
-              setState(() {
-                isNavigating = true;
-              });
-              // TODO: Implement actual navigation
+              setState(() => isNavigating = true);
+              // TODO: Add Google Maps navigation
             },
             onStartParking: startParking,
             onStopParking: stopParking,
@@ -239,64 +230,64 @@ class ParkingPriceCard extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Card(
-      elevation: 2,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        elevation: 2,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    "Hourly Rate",
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: Colors.grey[600],
-                    ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Hourly Rate",
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        "Ksh ${hourlyRate.toStringAsFixed(0)}/hr",
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    "Ksh ${hourlyRate.toStringAsFixed(0)}/hr",
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        "Availability",
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        "Available",
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: Colors.green,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    "Availability",
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    "Available",
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: Colors.green,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
+              if (isParkingStarted) ...[
+                const Divider(height: 32),
+                ParkingTimer(
+                  duration: parkingDuration,
+                  currentPrice: currentPrice,
+                ),
+              ],
             ],
           ),
-          if (isParkingStarted) ...[
-            const Divider(height: 32),
-            ParkingTimer(
-              duration: parkingDuration,
-              currentPrice: currentPrice,
-            ),
-          ],
-        ],
-      ),
-    ));
+        ));
   }
 }
 
