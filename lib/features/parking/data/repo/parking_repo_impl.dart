@@ -8,7 +8,7 @@ class ParkingRepositoryImpl implements ParkingRepository {
   ParkingRepositoryImpl(this.remoteDataSource);
 
   @override
-  Stream<List<ParkingSpotEntity>> getParkingSpotsStream() {
-    return remoteDataSource.getParkingSpotsStream();
+  Future<List<ParkingSpotEntity>> getParkingSpotsStream() {
+    return remoteDataSource.getParkingSpots();
   }
 }

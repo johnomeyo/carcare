@@ -2,8 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'models/parking_spot_model.dart';
 
+// --- 1. Update the Abstract Class ---
 abstract class ParkingRemoteDataSource {
-  Stream<List<ParkingSpotModel>> getParkingSpotsStream();
+  // Changed return type from Stream to Future
+  Future<List<ParkingSpotModel>> getParkingSpots();
 }
 
 class ParkingRemoteDataSourceImpl implements ParkingRemoteDataSource {
@@ -12,14 +14,17 @@ class ParkingRemoteDataSourceImpl implements ParkingRemoteDataSource {
   ParkingRemoteDataSourceImpl(this.firestore);
 
   @override
-  Stream<List<ParkingSpotModel>> getParkingSpotsStream() {
-    return firestore
-        .collection("parking_spots")
-        .snapshots()
-        .map((snapshot) {
-      return snapshot.docs.map((doc) {
-        return ParkingSpotModel.fromJson(doc.data(), doc.id);
-      }).toList();
-    });
+  // --- 2. Update the Concrete Implementation ---
+  Future<List<ParkingSpotModel>> getParkingSpots() async {
+    // Use .get() instead of .snapshots() to fetch data once
+    final querySnapshot = await firestore
+        .collection("parking_slots")
+        .get();
+
+    // Process the QuerySnapshot to map it to a list of models
+    return querySnapshot.docs.map((doc) {
+      // Ensure your ParkingSpotModel.fromJson handles the data and ID correctly
+      return ParkingSpotModel.fromJson(doc.data(), doc.id);
+    }).toList();
   }
 }

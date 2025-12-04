@@ -8,7 +8,7 @@ class GetParkingSpotsStream {
 
   GetParkingSpotsStream(this.repository);
 
-  Stream<List<ParkingSpotEntity>> call() {
+  Future<List<ParkingSpotEntity>> call() {
     return repository.getParkingSpotsStream();
   }
 }

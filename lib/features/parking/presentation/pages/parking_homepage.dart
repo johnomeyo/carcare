@@ -130,7 +130,6 @@ class _ParkingHomePageState extends State<ParkingHomePage> { // <--- 2. Create S
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             const SizedBox(height: 16),
-            // ... (rest of your UI remains the same)
             TextField(
               decoration: InputDecoration(
                 hintText: "Search location",
@@ -146,7 +145,6 @@ class _ParkingHomePageState extends State<ParkingHomePage> { // <--- 2. Create S
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 12),
-
             Expanded(
               child: BlocBuilder<ParkingBloc, ParkingState>(
                 builder: (context, state) {
@@ -159,8 +157,6 @@ class _ParkingHomePageState extends State<ParkingHomePage> { // <--- 2. Create S
                   }
 
                   if (state is ParkingLoaded) {
-                    // NOTE: Ensure your ParkingLoaded state uses List<ParkingSpotEntity>
-                    // or cast it safely if it was List<dynamic>
                     final spots = state.spots; 
 
                     if (spots.isEmpty) {
