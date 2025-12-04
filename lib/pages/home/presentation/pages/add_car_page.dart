@@ -19,15 +19,14 @@ class _VehicleOnboardingPageState extends State<VehicleOnboardingPage> {
   // 1. Create the single source of truth for data
   final VehicleData _vehicleData = VehicleData();
 
-  // 2. Adjust Form Keys (only 3 pages have forms, the verify page doesn't need one)
   final List<GlobalKey<FormState>> _formKeys = [
-    GlobalKey<FormState>(), // Documents
-    GlobalKey<FormState>(), // Specs
-    GlobalKey<FormState>(), // Photos (if you validate photos)
+    GlobalKey<FormState>(), 
+    GlobalKey<FormState>(),
+    GlobalKey<FormState>(), 
   ];
 
   int _currentPage = 0;
-  final int _totalPages = 4; // Increased to 4 to include Verify Page
+  final int _totalPages = 4; 
 
   @override
   void dispose() {
@@ -36,14 +35,12 @@ class _VehicleOnboardingPageState extends State<VehicleOnboardingPage> {
   }
 
   void _goToNextPage() {
-    // Validation logic
     if (_currentPage < _totalPages - 1) {
-      // If we are on a form page, validate it
       if (_currentPage < _formKeys.length) {
         if (!_formKeys[_currentPage].currentState!.validate()) {
-          return; // Stop if invalid
+          return; 
         }
-        _formKeys[_currentPage].currentState!.save(); // Save form data
+        _formKeys[_currentPage].currentState!.save(); 
       }
 
       _pageController.nextPage(
@@ -51,13 +48,11 @@ class _VehicleOnboardingPageState extends State<VehicleOnboardingPage> {
         curve: Curves.easeIn,
       );
     } else {
-      // Final Submit on the Verify Page
       _submitApplication();
     }
   }
 
   void _submitApplication() {
-    // Here you would call your API/Bloc/Provider
     DialogUtils.showSuccessDialog(
       context: context, 
       title: 'Success!', 
@@ -104,7 +99,6 @@ class _VehicleOnboardingPageState extends State<VehicleOnboardingPage> {
               itemBuilder: (context, index) {
                 switch (index) {
                   case 0:
-                    // Pass the data object so child can write to it
                     return VehicleDocumentsPage(
                       formKey: _formKeys[0], 
                       data: _vehicleData
@@ -120,7 +114,6 @@ class _VehicleOnboardingPageState extends State<VehicleOnboardingPage> {
                       data: _vehicleData
                     );
                   case 3:
-                    // The new Verify Page
                     return VehicleVerifyPage(
                       data: _vehicleData,
                       onEditPressed: _goToPreviousPage,

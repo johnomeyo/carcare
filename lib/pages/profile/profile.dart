@@ -1,8 +1,6 @@
 import 'package:carcare/pages/profile/utilities_section.dart';
-import 'package:carcare/providers/location_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -11,7 +9,6 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final userEmail = FirebaseAuth.instance.currentUser!.email;
-    final locationProvider = Provider.of<LocationProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -41,13 +38,13 @@ class ProfilePage extends StatelessWidget {
                   title: "Password",
                   trailingText: Text("*******"),
                 ),
-                _ProfileListTile(
-                  icon: Icons.location_pin,
-                  title: "Location",
-                  trailingText: locationProvider.locationString != null
-                      ? Text(locationProvider.locationString!)
-                      : const Text("Fetching location..."),
-                ),
+                // _ProfileListTile(
+                //   icon: Icons.location_pin,
+                //   title: "Location",
+                //   trailingText: locationProvider.locationString != null
+                //       ? Text(locationProvider.locationString!)
+                //       : const Text("Fetching location..."),
+                // ),
               ],
             ),
             const SizedBox(height: 20),

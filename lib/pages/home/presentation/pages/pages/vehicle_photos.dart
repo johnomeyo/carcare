@@ -33,10 +33,10 @@ class _VehiclePhotosPageState extends State<VehiclePhotosPage> {
       if (image != null) {
         setState(() {
           _imageFile = image;
+          widget.data.photoPaths = [image.path]; 
         });
       }
     } catch (e) {
-      print('Image picking error: $e');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

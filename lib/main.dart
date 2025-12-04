@@ -67,7 +67,7 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       body: IndexedStack(
         index: selectedIndex,
-        children: const [Homepage(), DiscoverPage(), ProfilePage()],
+        children: const [Homepage(), DiscoverPage(),],
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
@@ -79,14 +79,10 @@ class _MainScreenState extends State<MainScreen> {
             icon: Icon(Icons.explore),
             label: 'Discover',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
         ],
         currentIndex: selectedIndex,
-        selectedItemColor: Theme.of(context).colorScheme.secondary,
-        unselectedItemColor: Theme.of(context).colorScheme.onSurface,
+        selectedItemColor: Theme.of(context).colorScheme.primary,
+        unselectedItemColor: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.2),
         onTap: onItemTapped,
       ),
     );

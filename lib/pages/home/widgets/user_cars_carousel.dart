@@ -78,6 +78,7 @@ class UserCarsCarousel extends StatelessWidget {
           },
         );
       },
+
       options: CarouselOptions(
         height: 200, 
         viewportFraction: 1, 
@@ -85,7 +86,7 @@ class UserCarsCarousel extends StatelessWidget {
         enableInfiniteScroll: true,
         initialPage: 0,
         scrollDirection: Axis.horizontal,
-        autoPlay: true
+        autoPlay: true,
       ),
     );
   }

@@ -3,6 +3,7 @@ import 'package:carcare/pages/home/popular_section.dart';
 import 'package:carcare/pages/home/presentation/pages/add_car_page.dart';
 import 'package:carcare/pages/home/promo_card.dart';
 import 'package:carcare/pages/home/widgets/user_cars_carousel.dart';
+import 'package:carcare/pages/profile/profile.dart';
 import 'package:carcare/pages/widgets/heading.dart';
 import 'package:flutter/material.dart';
 import 'package:carcare/pages/home/category_section.dart';
@@ -52,6 +53,13 @@ class _HomepageState extends State<Homepage> {
                       imageUrl:
                           'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
                       id: '1'),
+                                        Car(
+                      carName: 'Audi R8 V10',
+                      plateNumber: 'JAX03',
+                      nextService: '2024-09-15',
+                      imageUrl:
+                          'https://images.pistonheads.com/nimg/46501/mceu_6169168411669210667502.jpg',
+                      id: '1'),
                 ],
                 onAddCarPressed: () {
                   Navigator.push(
@@ -80,11 +88,24 @@ class _HomepageState extends State<Homepage> {
 
   AppBar _buildAppBar(ThemeData theme, BuildContext context) {
     return AppBar(
-      leading: const Padding(
-        padding: EdgeInsets.only(left: 16),
-        child: CircleAvatar(
-          backgroundImage: NetworkImage(
-              "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1692249960i/195789506.jpg"),
+      leading:  Padding(
+        padding: const EdgeInsets.only(left: 16),
+        child: GestureDetector(
+          onTap: () {
+            Navigator.push(
+                context,
+                PageTransition(
+                  duration: const Duration(milliseconds: 500),
+                  reverseDuration: const Duration(milliseconds: 500),
+                  type: PageTransitionType.scale,
+                  alignment: Alignment.topLeft,
+                  child: const ProfilePage(),
+                ));
+          },
+          child: const CircleAvatar(
+            backgroundImage: NetworkImage(
+                "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1692249960i/195789506.jpg"),
+          ),
         ),
       ),
       title: const _AppBarTitle(),

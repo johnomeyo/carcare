@@ -2,6 +2,7 @@ import 'package:carcare/auth/auth_methods.dart';
 import 'package:carcare/pages/profile/faq_page.dart';
 import 'package:carcare/pages/profile/terms_of_use.dart';
 import 'package:carcare/pages/profile/utilities_tile.dart';
+import 'package:carcare/utils/dialogs_utils.dart';
 import 'package:flutter/material.dart';
 
 class UtilitiesSection extends StatelessWidget {
@@ -36,7 +37,16 @@ class UtilitiesSection extends StatelessWidget {
               color: Colors.red,
               subtitle: "Log out of your account",
               onTap: () {
-                AuthMethods().signOut();
+                DialogUtils.showConfirmDialog(
+                  context: context,
+                  title: "Logout",
+                  message: "Are you sure you want to log out?",
+                  onPressed: () {
+                    print("Logout pressed");
+                    AuthMethods().signOut();
+                    Navigator.of(context).popUntil((route) => route.isFirst);
+                  },
+                );
               }),
         ],
       ),

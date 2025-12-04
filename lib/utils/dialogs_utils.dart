@@ -189,6 +189,7 @@ class DialogUtils {
     required BuildContext context,
     required String title,
     required String message,
+    void Function()? onPressed,
     String? confirmText,
     String? cancelText,
     bool isDestructive = false,
@@ -269,7 +270,7 @@ class DialogUtils {
                   const SizedBox(width: 12),
                   Expanded(
                     child: FilledButton(
-                      onPressed: () => Navigator.of(context).pop(true),
+                      onPressed: onPressed ?? () => Navigator.of(context).pop(true),
                       style: FilledButton.styleFrom(
                         backgroundColor: isDestructive 
                             ? theme.colorScheme.error 

@@ -1,5 +1,6 @@
+import 'package:image_picker/image_picker.dart';
+
 class VehicleData {
-  // Specs
   String? registrationNumber;
   String? make;
   String? yearOfManufacture;
@@ -11,17 +12,19 @@ class VehicleData {
   String? mileage;
   String? color;
 
-  // Documents (File Paths)
   String? logbookPath;
   String? insurancePath;
   String? ntsaPath;
 
-  // Photos (File Paths)
+  XFile? vehiclePhoto;
+  XFile? logbookDocument;
+  XFile? insuranceDocument;
+  XFile? ntsaDocument;
+
   List<String> photoPaths = [];
 
   VehicleData();
 
-  // ---------- FROM JSON ----------
   VehicleData.fromJson(Map<String, dynamic> json) {
     registrationNumber = json['registrationNumber'];
     make = json['make'];
@@ -41,7 +44,6 @@ class VehicleData {
     photoPaths = List<String>.from(json['photoPaths'] ?? []);
   }
 
-  // ---------- TO JSON ----------
   Map<String, dynamic> toJson() {
     return {
       'registrationNumber': registrationNumber,
@@ -54,11 +56,9 @@ class VehicleData {
       'steering': steering,
       'mileage': mileage,
       'color': color,
-
       'logbookPath': logbookPath,
       'insurancePath': insurancePath,
       'ntsaPath': ntsaPath,
-
       'photoPaths': photoPaths,
     };
   }

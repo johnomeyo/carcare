@@ -10,19 +10,16 @@ class AuthCheck extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamBuilder<User?>(
       stream:
-          FirebaseAuth.instance.authStateChanges(), // Listen to auth changes
+          FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          // Show loading spinner while checking auth state
           return const Scaffold(
             body: Center(child: CircularProgressIndicator.adaptive()),
           );
         } else if (snapshot.hasData) {
-          // If user is logged in, go to Main screen
           
           return const MainScreen();
         } else {
-          // If user is not logged in, go to LoginPage
           return const OnboardingScreen();
         }
       },

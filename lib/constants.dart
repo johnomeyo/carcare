@@ -194,3 +194,15 @@ final List<Map<String, String>> onboardingData = [
 const secretApiKey =
     "sk-xuAHtpbnNwM2cuEAYAXkkwZpPc3VbVay7gbxZZdRBkT3BlbkFJxj6jkHSfZUpgS5hsb1LgzsJ8CE7Tawp65r6P6pBfYA";
 
+
+
+class AppDimensions {
+  static const double extraSmall = 4.0;
+  static const double small = 8.0;
+  static const double medium = 16.0;
+  static const double large = 24.0;
+  static const double extraLarge = 32.0;
+
+  static const double shapeSmall = 8.0;
+  static const double shapeMedium = 12.0;
+}

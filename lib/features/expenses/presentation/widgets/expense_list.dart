@@ -2,6 +2,7 @@ import 'package:carcare/features/expenses/dormain/entities/expense_entity.dart';
 import 'package:carcare/features/expenses/presentation/bloc/expense_bloc.dart';
 import 'package:carcare/features/expenses/presentation/bloc/expense_event.dart';
 import 'package:carcare/features/expenses/presentation/bloc/expense_state.dart';
+import 'package:carcare/features/parking/presentation/widgets/list_shimmer.dart';
 import 'package:carcare/pages/chat/presentation/widgets/empty_state.dart';
 import 'package:carcare/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -51,7 +52,7 @@ class _ExpenseListSectionState extends State<ExpenseListSection> {
         BlocBuilder<ExpenseBloc, ExpenseState>(
           builder: (context, state) {
             if (state is ExpenseLoading) {
-              return const Center(child: CircularProgressIndicator());
+              return const Center(child: ListShimmerWidget());
             }
 
             if (state is ExpenseError) {
@@ -74,7 +75,7 @@ class _ExpenseListSectionState extends State<ExpenseListSection> {
               return ListView.separated(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: 6,
+                itemCount: expenses.length >= 6 ? 6 : expenses.length,
                 separatorBuilder: (_, __) => const Divider(height: 1),
                 itemBuilder: (context, index) {
                   final expense = expenses[index];

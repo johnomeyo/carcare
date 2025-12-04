@@ -27,7 +27,6 @@ class VehicleVerifyPage extends StatelessWidget {
           
           const SectionHeader(
             title: 'Vehicle Specifications',
-            icon: Icons.directions_car_outlined,
           ),
           const SizedBox(height: 12),
           VehicleSpecsCard(data: data),
@@ -36,7 +35,6 @@ class VehicleVerifyPage extends StatelessWidget {
           
           const SectionHeader(
             title: 'Documents',
-            icon: Icons.description_outlined,
           ),
           const SizedBox(height: 12),
           DocumentsCard(data: data),
@@ -44,8 +42,7 @@ class VehicleVerifyPage extends StatelessWidget {
           const SizedBox(height: 32),
           
           const SectionHeader(
-            title: 'Vehicle Photos',
-            icon: Icons.photo_library_outlined,
+            title: 'Vehicle Photo',
           ),
           const SizedBox(height: 12),
           VehiclePhotosGrid(photoPaths: data.photoPaths),
@@ -96,12 +93,12 @@ class PageHeader extends StatelessWidget {
 
 class SectionHeader extends StatelessWidget {
   final String title;
-  final IconData icon;
+  final IconData? icon;
 
   const SectionHeader({
     super.key,
     required this.title,
-    required this.icon,
+     this.icon,
   });
 
   @override
@@ -110,16 +107,19 @@ class SectionHeader extends StatelessWidget {
     
     return Row(
       children: [
-        Container(
-          padding: const EdgeInsets.all(6),
-          decoration: BoxDecoration(
-            color: theme.colorScheme.primaryContainer,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Icon(
-            icon,
-            size: 18,
-            color: theme.colorScheme.primary,
+        Visibility(
+          visible: icon != null,
+          child: Container(
+            padding: const EdgeInsets.all(6),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.secondary,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(
+              icon,
+              size: 18,
+              color: theme.colorScheme.primary,
+            ),
           ),
         ),
         const SizedBox(width: 12),
@@ -273,7 +273,7 @@ class DocumentsCard extends StatelessWidget {
           const InfoDivider(),
           DocumentTile(
             title: 'Insurance',
-            path: data.insurancePath,
+            path: data.insuranceDocument?.path,
           ),
           const InfoDivider(),
           DocumentTile(
@@ -309,7 +309,7 @@ class DocumentTile extends StatelessWidget {
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: hasFile
-                  ? theme.colorScheme.primaryContainer
+                  ? theme.colorScheme.surfaceContainer
                   : theme.colorScheme.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(12),
             ),
