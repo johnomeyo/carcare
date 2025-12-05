@@ -5,7 +5,7 @@ class VehicleModel extends VehicleEntity {
   final String? insuranceUrl;
   final String? ntsaUrl;
   final List<String> photoUrls;
-
+  final String? id; 
   VehicleModel({
     required super.registrationNumber,
     required super.make,
@@ -21,7 +21,34 @@ class VehicleModel extends VehicleEntity {
     this.insuranceUrl,
     this.ntsaUrl,
     this.photoUrls = const [],
+    this.id,
   });
+
+  factory VehicleModel.fromJson(Map<String, dynamic> json) {
+    return VehicleModel(
+      registrationNumber: json['registrationNumber'] as String,
+      make: json['make'] as String,
+      yearOfManufacture: json['yearOfManufacture'] as String,
+      powerFuel: json['powerFuel'] as String,
+      engineSize: json['engineSize'] as String,
+      chassisNumber: json['chassisNumber'] as String,
+      transmission: json['transmission'] as String,
+      steering: json['steering'] as String,
+      mileage: json['mileage'] as String,
+      color: json['color'] as String,
+      
+      logbookUrl: json['logbookPath'] ?? '',
+      insuranceUrl: json['insurancePath'] ?? '',
+      ntsaUrl: json['ntsaPath'] ?? '',
+      
+      photoUrls: (json['photoPaths'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList() ??
+          const [],
+          
+      id: json['id'] as String?,
+    );
+  }
 
   Map<String, dynamic> toJson() {
     return {
@@ -39,17 +66,18 @@ class VehicleModel extends VehicleEntity {
       'insurancePath': insuranceUrl,
       'ntsaPath': ntsaUrl,
       'photoPaths': photoUrls,
-      'createdAt': DateTime.now().toIso8601String(),
+      'createdAt': DateTime.now().toIso8601String(), 
     };
   }
   
-  // Factory to create Model from Entity + Uploaded URLs
+  // 3. Factory constructor for converting VehicleEntity to VehicleModel
   factory VehicleModel.fromEntity(
     VehicleEntity entity, {
     String? logbookUrl,
     String? insuranceUrl,
     String? ntsaUrl,
     String? photoUrl,
+    String? id,
   }) {
     return VehicleModel(
       registrationNumber: entity.registrationNumber,
@@ -66,6 +94,22 @@ class VehicleModel extends VehicleEntity {
       insuranceUrl: insuranceUrl,
       ntsaUrl: ntsaUrl,
       photoUrls: photoUrl != null ? [photoUrl] : [],
+      id: id,
+    );
+  }
+
+    VehicleEntity toEntity() {
+    return VehicleEntity(
+      registrationNumber: registrationNumber,
+      make: make,
+      yearOfManufacture: yearOfManufacture,
+      powerFuel: powerFuel,
+      engineSize: engineSize,
+      chassisNumber: chassisNumber,
+      transmission: transmission,
+      steering: steering,
+      mileage: mileage,
+      color: color,
     );
   }
 }

@@ -14,6 +14,7 @@ import 'package:carcare/pages/home/presentation/features/add_car/data/repository
 import 'package:carcare/pages/home/presentation/features/add_car/data/vehicle_datasource.dart';
 import 'package:carcare/pages/home/presentation/features/add_car/domain/repositories/add_vehicle_repository.dart';
 import 'package:carcare/pages/home/presentation/features/add_car/domain/usecases/add_vehicle_usecase.dart';
+import 'package:carcare/pages/home/presentation/features/add_car/domain/usecases/fetch_user_vehicles_usecase.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
@@ -65,10 +66,12 @@ Future<void> setupServiceLocator() async {
   //  VEHICLE MODULE
 
   // Bloc
-  sl.registerFactory(() => VehicleBloc(submitVehicleUseCase: sl()));
+  sl.registerFactory(() =>
+      VehicleBloc(submitVehicleUseCase: sl(), fetchUserVehiclesUseCase: sl()));
 
   // Use Cases
   sl.registerLazySingleton(() => AddVehicleUsecase(sl()));
+  sl.registerLazySingleton(() => FetchUserVehiclesUseCase(repository: sl()));
 
   // Repository
   sl.registerLazySingleton<VehicleRepository>(
@@ -77,10 +80,8 @@ Future<void> setupServiceLocator() async {
 
   // Data Sources
   sl.registerLazySingleton<VehicleRemoteDataSource>(
-    () => VehicleRemoteDataSourceImpl(
-      firestore: sl(),
-      storage: sl(),
-    ),
+    () =>
+        VehicleRemoteDataSourceImpl(firestore: sl(), storage: sl(), auth: sl()),
   );
- sl.registerLazySingleton(  () => FirebaseStorage.instance);
+  sl.registerLazySingleton(() => FirebaseStorage.instance);
 }

@@ -9,3 +9,10 @@ class VehicleFailure extends VehicleState {
   final String message;
   VehicleFailure(this.message);
 }
+
+class FetchVehiclesEvent extends VehicleEvent {}
+class VehiclesLoaded extends VehicleState {
+  final List<VehicleEntity> vehicles;
+
+  VehiclesLoaded({required this.vehicles});
+}

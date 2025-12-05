@@ -23,7 +23,7 @@ class EmptyState extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              imagePath,
+              "lib/assets/empty.png",
               width: 150,
               height: 150,
               fit: BoxFit.contain,
